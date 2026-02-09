@@ -1,4 +1,4 @@
-# DhanGyan - Quick Start Guide
+# DhyanGyan - Quick Start Guide
 
 ## New Features Overview
 
@@ -23,7 +23,7 @@ Master financial skills through structured learning paths.
 5. Unlock new skills by completing prerequisites
 
 ### ✨ Shuffle Text Animation
-The "Dhan Gyan" title on the homepage now has a cool shuffle animation!
+The "Dhyan Gyan" title on the homepage now has a cool shuffle animation!
 
 **Features:**
 - Auto-plays when page loads
@@ -125,4 +125,4 @@ For issues or questions:
 
 ---
 
-**Enjoy learning with DhanGyan!** 🎉
+**Enjoy learning with DhyanGyan!** 🎉

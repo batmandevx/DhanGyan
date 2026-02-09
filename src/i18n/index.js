@@ -83,7 +83,7 @@ const translations = {
       portfolio: 'Portfolio',
       cash: 'Cash',
     },
-    
+
     // Games Page
     games: {
       title: 'Financial Arcade',
@@ -96,7 +96,7 @@ const translations = {
         sim: 'Simulation',
       },
     },
-    
+
     // Individual Games
     gamesList: {
       stockmarket: {
@@ -279,7 +279,7 @@ const translations = {
         },
       },
     },
-    
+
     // Power-ups
     powerups: {
       title: 'Power-Up Shop',
@@ -305,7 +305,7 @@ const translations = {
       buyFor: 'Buy for',
       notEnoughCoins: 'Not enough coins!',
     },
-    
+
     // Achievements
     achievements: {
       title: 'Achievements',
@@ -345,7 +345,7 @@ const translations = {
         description: 'Earn 5000+ total coins',
       },
     },
-    
+
     // Stats
     stats: {
       title: 'Statistics',
@@ -359,7 +359,7 @@ const translations = {
       favoriteGame: 'Favorite Game',
       totalPlayTime: 'Total Play Time',
     },
-    
+
     // Background presets
     presets: {
       cyberpunk: 'Cyberpunk',
@@ -367,7 +367,7 @@ const translations = {
       golden: 'Golden',
     },
   },
-  
+
   // Hindi translations
   hi: {
     common: {
@@ -435,7 +435,7 @@ const translations = {
       portfolio: 'पोर्टफोलियो',
       cash: 'नकद',
     },
-    
+
     games: {
       title: 'वित्तीय आर्केड',
       subtitle: 'खेलें, पुरस्कार जीतें, वित्त पर महारत हासिल करें!',
@@ -447,7 +447,7 @@ const translations = {
         sim: 'सिमुलेशन',
       },
     },
-    
+
     gamesList: {
       spin: {
         name: 'भाग्यशाली स्पिन',
@@ -577,7 +577,7 @@ const translations = {
         },
       },
     },
-    
+
     powerups: {
       title: 'पावर-अप दुकान',
       doubleCoins: {
@@ -602,7 +602,7 @@ const translations = {
       buyFor: 'खरीदें',
       notEnoughCoins: 'पर्याप्त सिक्के नहीं!',
     },
-    
+
     achievements: {
       title: 'उपलब्धियां',
       unlocked: 'अनलॉक्ड',
@@ -641,7 +641,7 @@ const translations = {
         description: '5000+ कुल सिक्के कमाएं',
       },
     },
-    
+
     stats: {
       title: 'आंकड़े',
       totalCoins: 'कुल कमाए गए सिक्के',
@@ -654,7 +654,7 @@ const translations = {
       favoriteGame: 'पसंदीदा खेल',
       totalPlayTime: 'कुल खेल समय',
     },
-    
+
     presets: {
       cyberpunk: 'साइबरपंक',
       midnight: 'मध्यरात्रि',
@@ -668,20 +668,20 @@ const I18nContext = createContext();
 
 export const I18nProvider = ({ children }) => {
   const [language, setLanguage] = useState(() => {
-    const saved = localStorage.getItem('dhangyan_language');
+    const saved = localStorage.getItem('dhyangyan_language');
     return saved || 'en';
   });
 
   const changeLanguage = useCallback((lang) => {
     setLanguage(lang);
-    localStorage.setItem('dhangyan_language', lang);
+    localStorage.setItem('dhyangyan_language', lang);
     document.documentElement.lang = lang;
   }, []);
 
   const t = useCallback((key, params = {}) => {
     const keys = key.split('.');
     let value = translations[language];
-    
+
     for (const k of keys) {
       if (value && typeof value === 'object') {
         value = value[k];
@@ -722,12 +722,12 @@ export const I18nProvider = ({ children }) => {
   const currentLanguage = LANGUAGES[language] || LANGUAGES['en'];
 
   return (
-    <I18nContext.Provider value={{ 
-      t, 
-      language, 
-      changeLanguage, 
+    <I18nContext.Provider value={{
+      t,
+      language,
+      changeLanguage,
       currentLanguage,
-      languages: LANGUAGES 
+      languages: LANGUAGES
     }}>
       {children}
     </I18nContext.Provider>

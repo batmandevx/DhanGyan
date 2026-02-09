@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
+import {
   ArrowLeft, Coins, Trophy, Star, X, Gem,
   Dices, Brain, Target, RotateCcw, CheckCircle,
   TrendingUp, PiggyBank, Lightbulb, Zap, Timer, BarChart3,
@@ -16,8 +16,8 @@ import confetti from 'canvas-confetti';
 
 // ==================== SOUND SYSTEM ====================
 const useSound = () => {
-  const [muted, setMuted] = useState(() => localStorage.getItem('dhangyan_muted') === 'true');
-  
+  const [muted, setMuted] = useState(() => localStorage.getItem('dhyangyan_muted') === 'true');
+
   const playSound = useCallback((type) => {
     if (muted) return;
     const audio = new Audio();
@@ -29,7 +29,7 @@ const useSound = () => {
       const gain = oscillator.createGain();
       osc.connect(gain);
       gain.connect(oscillator.destination);
-      
+
       if (type === 'win') {
         osc.frequency.setValueAtTime(523.25, oscillator.currentTime); // C5
         osc.frequency.setValueAtTime(659.25, oscillator.currentTime + 0.1); // E5
@@ -47,14 +47,14 @@ const useSound = () => {
       }
     }
   }, [muted]);
-  
+
   const toggleMute = () => {
     setMuted(prev => {
-      localStorage.setItem('dhangyan_muted', !prev);
+      localStorage.setItem('dhyangyan_muted', !prev);
       return !prev;
     });
   };
-  
+
   return { playSound, muted, toggleMute };
 };
 
@@ -203,10 +203,10 @@ const SpinWheel = ({ onWin, onClose, powerUps, t }) => {
     setSpinning(true);
     setSpinsLeft(prev => prev - 1);
     setResult(null);
-    
+
     const newRotation = rotation + 1800 + Math.random() * 360;
     setRotation(newRotation);
-    
+
     setTimeout(() => {
       const actualRotation = newRotation % 360;
       const segmentAngle = 360 / prizes.length;
@@ -215,7 +215,7 @@ const SpinWheel = ({ onWin, onClose, powerUps, t }) => {
       const multipliedPrize = { ...prize, value: prize.value * (prize.type === 'coins' ? multiplier : 1) };
       setResult(multipliedPrize);
       setSpinning(false);
-      
+
       if (multipliedPrize.value > 0 && multipliedPrize.type !== 'multiplier') {
         confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 }, colors: [multipliedPrize.color, '#FFD700', '#FFA500'] });
         onWin?.(multipliedPrize);
@@ -525,7 +525,7 @@ const InvestmentTycoon = ({ onWin, onClose, t }) => {
   ];
 
   const events = [
-    t('gamesList.investment.events.stable'), t('gamesList.investment.events.techBoom'), 
+    t('gamesList.investment.events.stable'), t('gamesList.investment.events.techBoom'),
     t('gamesList.investment.events.cryptoSurge'), t('gamesList.investment.events.goldRises'),
     t('gamesList.investment.events.correction'), t('gamesList.investment.events.techCrash'),
     t('gamesList.investment.events.cryptoDips'), t('gamesList.investment.events.goldShines')
@@ -539,7 +539,7 @@ const InvestmentTycoon = ({ onWin, onClose, t }) => {
     });
     setPrices(newPrices);
     setNews(events[Math.floor(Math.random() * events.length)]);
-    
+
     if (day >= maxDays) {
       setGameOver(true);
       const totalValue = balance + portfolio.stocks * newPrices.stocks + portfolio.crypto * newPrices.crypto + portfolio.gold * newPrices.gold;
@@ -791,11 +791,10 @@ const FinancialTrivia = ({ onWin, onClose, t }) => {
       <div className="space-y-2 mb-4">
         {questions[current].options.map((opt, idx) => (
           <button key={idx} onClick={() => answer(idx)} disabled={answered}
-            className={`w-full p-3 rounded-xl text-left text-sm transition-all ${
-              answered 
+            className={`w-full p-3 rounded-xl text-left text-sm transition-all ${answered
                 ? idx === questions[current].correct ? 'bg-green-500/30 border border-green-500' : idx === selected ? 'bg-red-500/30 border border-red-500' : 'bg-white/5'
                 : 'bg-white/10 hover:bg-white/20'
-            }`}>
+              }`}>
             {opt}
             {answered && idx === questions[current].correct && <CheckCircle size={16} className="inline ml-2 text-green-400" />}
           </button>
@@ -833,7 +832,7 @@ const GamesPage = ({ user, onClose }) => {
   const [gamesPlayed, setGamesPlayed] = useState(0);
   const [activeTab, setActiveTab] = useState('games');
   const { playSound, muted, toggleMute } = useSound();
-  
+
   // Generate gaming activity data for heatmap
   const [gameActivity] = useState(() => {
     const data = [];
@@ -887,7 +886,7 @@ const GamesPage = ({ user, onClose }) => {
       if (ach.id === 'investor' && data.game === 'investment' && data.prize?.profit >= 1000) earned = true;
       if (ach.id === 'triviaWhiz' && data.game === 'trivia' && data.prize?.xp >= 150) earned = true;
       if (ach.id === 'rich' && totalWinnings.coins + data.coins >= 5000) earned = true;
-      
+
       if (earned) {
         newAchievements.push(ach.id);
         setTotalWinnings(prev => ({ ...prev, coins: prev.coins + ach.reward }));
@@ -1037,7 +1036,7 @@ const GamesPage = ({ user, onClose }) => {
               <Flame size={16} className="text-orange-400" />
               <MiniHeatmap data={gameActivity} colorScheme="orange" days={30} />
             </div>
-            
+
             <div className="flex items-center gap-2 px-3 py-1.5 bg-yellow-500/20 backdrop-blur-sm rounded-full border border-yellow-500/30">
               <Coins size={16} className="text-yellow-400" />
               <span className="font-bold text-sm">{totalWinnings.coins}</span>

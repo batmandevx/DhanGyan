@@ -45,7 +45,7 @@ const Hero = ({ onStart }) => {
 
                     <div className="mb-6 flex justify-center">
                         <Shuffle
-                            text="Dhan Gyan"
+                            text="Dhyan Gyan"
                             tag="h1"
                             className="text-5xl md:text-8xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-yellow-400 drop-shadow-lg"
                             shuffleDirection="right"
@@ -214,7 +214,7 @@ const WomenEmpowermentSection = () => (
                                     <p className="text-xs text-gray-300">Senior Fintech Analyst</p>
                                 </div>
                             </div>
-                            <p className="mt-3 text-sm text-gray-300 italic">"DhanGyan gave me the confidence to start my investment journey."</p>
+                            <p className="mt-3 text-sm text-gray-300 italic">"DhyanGyan gave me the confidence to start my investment journey."</p>
                         </div>
                     </div>
                 </motion.div>
@@ -291,7 +291,7 @@ const Testimonials = () => (
                     {
                         name: "Priya Patel",
                         role: "Home Maker",
-                        text: "Dhan Gyan helped me understand simple savings tools that I was too intimidated to try before. Highly recommended!",
+                        text: "Dhyan Gyan helped me understand simple savings tools that I was too intimidated to try before. Highly recommended!",
                         avatar: "PP"
                     },
                     {

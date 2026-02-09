@@ -1,11 +1,11 @@
-# 🎯 DhanGyan - Modern Financial Learning Platform
+# 🎯 DhyanGyan - Modern Financial Learning Platform
 
 [![React](https://img.shields.io/badge/React-18.x-61DAFB?logo=react)](https://reactjs.org/)
 [![Firebase](https://img.shields.io/badge/Firebase-Latest-FFCA28?logo=firebase)](https://firebase.google.com/)
 [![GSAP](https://img.shields.io/badge/GSAP-Latest-88CE02?logo=greensock)](https://greensock.com/)
 [![Tailwind](https://img.shields.io/badge/Tailwind-CSS-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
 
-**DhanGyan** is a gamified financial literacy platform that makes learning about money management fun and engaging through AI-powered features, interactive challenges, and community-driven learning.
+**DhyanGyan** is a gamified financial literacy platform that makes learning about money management fun and engaging through AI-powered features, interactive challenges, and community-driven learning.
 
 ---
 
@@ -56,7 +56,7 @@
 1. **Clone the repository**
 ```bash
 git clone <repository-url>
-cd DhanGyan-master
+cd DhyanGyan-master
 ```
 
 2. **Install dependencies**
@@ -101,7 +101,7 @@ The app will open at [http://localhost:3000](http://localhost:3000)
 ## 📁 Project Structure
 
 ```
-DhanGyan-master/
+DhyanGyan-master/
 ├── src/
 │   ├── components/
 │   │   ├── common/              # Reusable UI components
@@ -427,8 +427,8 @@ This project is licensed under the MIT License.
 
 ## 📞 Support
 
-For support, email support@dhangyan.com or join our Discord community.
+For support, email support@dhyangyan.com or join our Discord community.
 
 ---
 
-**Made with ❤️ by the DhanGyan Team**
+**Made with ❤️ by the DhyanGyan Team**

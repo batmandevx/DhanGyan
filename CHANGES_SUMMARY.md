@@ -1,7 +1,7 @@
-# DhanGyan Project Changes Summary
+# DhyanGyan Project Changes Summary
 
 ## Overview
-This document summarizes all the changes made to the DhanGyan project including bug fixes, new features, and enhancements.
+This document summarizes all the changes made to the DhyanGyan project including bug fixes, new features, and enhancements.
 
 ## 1. Bug Fixes
 
@@ -106,7 +106,7 @@ GSAP-powered text shuffle animation for the homepage.
 **Usage:**
 ```jsx
 <Shuffle
-  text="Dhan Gyan"
+  text="Dhyan Gyan"
   shuffleDirection="right"
   duration={0.4}
   shuffleTimes={2}
@@ -198,7 +198,7 @@ src/
 ### Access New Features
 1. **Zonal Learning**: Navigate to `/zones` or click "Zonal Learning" in sidebar
 2. **Skills**: Navigate to `/skills` or click "Skills" in sidebar
-3. **Shuffle Animation**: Visible on homepage "Dhan Gyan" title
+3. **Shuffle Animation**: Visible on homepage "Dhyan Gyan" title
 
 ### Skills System
 - Click any skill card to view details

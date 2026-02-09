@@ -73,7 +73,7 @@ const GlassCard = ({ children, className }) => {
   );
 };
 
-const DhanGyanHomepage = () => {
+const DhyanGyanHomepage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showLoginSignup, setShowLoginSignup] = useState(false);
   const [showAIChat, setShowAIChat] = useState(false);
@@ -103,7 +103,7 @@ const DhanGyanHomepage = () => {
           <button onClick={toggleSidebar} className="mr-4 hover:text-yellow-300 transition-colors duration-300">
             <Menu size={24} />
           </button>
-          <h1 className="text-4xl font-bold">Dhan Gyan</h1>
+          <h1 className="text-4xl font-bold">Dhyan Gyan</h1>
         </div>
         <div>
           <button onClick={() => setShowLoginSignup(true)} className="bg-white text-blue-600 px-6 py-2 rounded-full font-semibold mr-4 hover:bg-yellow-300 transition-all duration-300 transform hover:scale-105">Login</button>
@@ -136,7 +136,7 @@ const DhanGyanHomepage = () => {
         <section className="text-center mb-12 animate-fade-in-up">
           <div className="mb-4">
             <Shuffle
-              text="Dhan Gyan"
+              text="Dhyan Gyan"
               tag="h1"
               className="text-6xl md:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-500"
               shuffleDirection="right"
@@ -207,13 +207,13 @@ const DhanGyanHomepage = () => {
 
         {/* About Section */}
         <GlassCard className="mb-12 animate-fade-in-up">
-          <h2 className="text-3xl font-bold mb-4">About Dhan Gyan</h2>
-          <p className="text-lg">Dhan Gyan is a comprehensive financial literacy platform designed to empower women and young individuals with the knowledge and tools they need to achieve financial success.</p>
+          <h2 className="text-3xl font-bold mb-4">About Dhyan Gyan</h2>
+          <p className="text-lg">Dhyan Gyan is a comprehensive financial literacy platform designed to empower women and young individuals with the knowledge and tools they need to achieve financial success.</p>
         </GlassCard>
 
         {/* Learn Section */}
         <section id="learn" className="mb-12 animate-fade-in-up">
-          <h2 className="text-3xl font-bold mb-4">Learn with Dhan Gyan</h2>
+          <h2 className="text-3xl font-bold mb-4">Learn with Dhyan Gyan</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {['Budgeting Basics', 'Investment Strategies', 'Credit Management', 'Tax Planning'].map((course, index) => (
               <GlassCard key={course} className={`hover:bg-opacity-20 transition-all duration-300 transform hover:scale-105`} style={{ animationDelay: `${index * 0.1}s` }}>
@@ -251,10 +251,10 @@ const DhanGyanHomepage = () => {
 
       {/* Footer */}
       <footer className="bg-blue-900 bg-opacity-50 text-white p-4 text-center mt-12">
-        <p>&copy; 2024 Dhan Gyan. All rights reserved.</p>
+        <p>&copy; 2024 Dhyan Gyan. All rights reserved.</p>
       </footer>
     </div>
   );
 };
 
-export default DhanGyanHomepage;
+export default DhyanGyanHomepage;
