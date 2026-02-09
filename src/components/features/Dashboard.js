@@ -15,7 +15,7 @@ import {
   Activity
 } from 'lucide-react';
 import { GlassCard, AnimatedButton, ProgressBar, StatCard } from '../ui';
-import { useScrollAnimation } from '../../hooks/useAnimations';
+// import { useScrollAnimation } from '../../hooks/useAnimations';
 
 const mockData = {
   user: {
@@ -51,10 +51,8 @@ const mockData = {
 };
 
 const SkillBar = ({ skill }) => {
-  const [ref, isVisible] = useScrollAnimation(0.3);
-  
   return (
-    <div ref={ref} className="mb-3">
+    <div className="mb-3">
       <div className="flex justify-between text-sm mb-1">
         <span className="text-gray-300">{skill.name}</span>
         <span className="text-white">{skill.level}%</span>
@@ -62,7 +60,7 @@ const SkillBar = ({ skill }) => {
       <div className="h-2 bg-white/10 rounded-full overflow-hidden">
         <motion.div
           initial={{ width: 0 }}
-          animate={{ width: isVisible ? `${skill.level}%` : 0 }}
+          animate={{ width: `${skill.level}%` }}
           transition={{ duration: 1, ease: 'easeOut' }}
           className="h-full bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"
         />

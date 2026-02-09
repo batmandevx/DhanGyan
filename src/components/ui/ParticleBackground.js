@@ -193,4 +193,5 @@ export const GradientOrbs = () => {
   );
 };
 
+export { ParticleBackground };
 export default ParticleBackground;

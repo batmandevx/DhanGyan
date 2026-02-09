@@ -1,622 +1,629 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaStar, FaMoon, FaSun, FaSearch, FaExpandAlt, FaGraduationCap, FaPiggyBank, FaChartLine } from 'react-icons/fa';
+import { 
+  Play, BookOpen, Trophy, Target, Flame, Clock, Star, 
+  Search, Filter, ChevronRight, TrendingUp, Users,
+  X, CheckCircle, Lock, Zap, Lightbulb,
+  Crown, Sparkles, ArrowRight, Pause,
+  ThumbsUp, Share2, Bookmark, MessageCircle,
+  GraduationCap
+} from 'lucide-react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import confetti from 'canvas-confetti';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useTranslation } from './i18n';
+import { ContributionHeatmap } from './components/ui';
 
 const API_KEY = 'AIzaSyAsxnp7YgiJIfZWoaYkRFWIatgcrjBZh18';
 const BASE_URL = 'https://www.googleapis.com/youtube/v3';
 
-const FinancialLiteracyLearning = () => {
+// Course categories with icons
+const CATEGORIES = [
+  { id: 'All', name: 'All Courses', icon: BookOpen, color: 'from-purple-500 to-pink-500' },
+  { id: 'Investing', name: 'Investing', icon: TrendingUp, color: 'from-green-500 to-emerald-500' },
+  { id: 'Budgeting', name: 'Budgeting', icon: Target, color: 'from-blue-500 to-cyan-500' },
+  { id: 'Credit', name: 'Credit & Loans', icon: CreditIcon, color: 'from-orange-500 to-red-500' },
+  { id: 'Taxes', name: 'Tax Planning', icon: CalculatorIcon, color: 'from-yellow-500 to-amber-500' },
+  { id: 'Entrepreneurship', name: 'Business', icon: Crown, color: 'from-indigo-500 to-purple-500' },
+  { id: 'Retirement', name: 'Retirement', icon: Clock, color: 'from-teal-500 to-green-500' },
+  { id: 'Cryptocurrency', name: 'Crypto', icon: Zap, color: 'from-pink-500 to-rose-500' },
+];
+
+// Custom icons
+function CreditIcon(props) { return <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>; }
+function CalculatorIcon(props) { return <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/></svg>; }
+
+// Mock quiz data
+const QUIZZES = {
+  'Investing': [
+    { q: 'What is diversification?', options: ['Investing in one stock', 'Spreading investments', 'Saving in bank'], correct: 1 },
+    { q: 'What does ROI stand for?', options: ['Return on Investment', 'Risk of Investment', 'Rate of Interest'], correct: 0 },
+  ],
+  'Budgeting': [
+    { q: 'What is the 50/30/20 rule?', options: ['50% needs, 30% wants, 20% savings', '50% savings, 30% needs, 20% wants', 'Equal split'], correct: 0 },
+  ],
+};
+
+// Learning paths
+const LEARNING_PATHS = [
+  {
+    id: 'beginner',
+    title: 'Financial Beginner',
+    description: 'Master the basics of personal finance',
+    icon: Lightbulb,
+    color: 'from-green-400 to-emerald-500',
+    courses: ['Budgeting', 'Credit', 'Taxes'],
+    reward: { coins: 500, badge: 'Beginner Badge' },
+  },
+  {
+    id: 'investor',
+    title: 'Smart Investor',
+    description: 'Learn to grow your wealth through investing',
+    icon: TrendingUp,
+    color: 'from-blue-400 to-indigo-500',
+    courses: ['Investing', 'Cryptocurrency'],
+    reward: { coins: 1000, badge: 'Investor Badge' },
+  },
+  {
+    id: 'entrepreneur',
+    title: 'Business Owner',
+    description: 'Build and scale your business',
+    icon: Crown,
+    color: 'from-purple-400 to-pink-500',
+    courses: ['Entrepreneurship', 'Taxes'],
+    reward: { coins: 1500, badge: 'Entrepreneur Badge' },
+  },
+];
+
+const FinancialLiteracyLearning = ({ onClose }) => {
+  const { t } = useTranslation();
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [videos, setVideos] = useState([]);
   const [currentVideo, setCurrentVideo] = useState(null);
-  const [userScore, setUserScore] = useState(0);
-  const [quizOpen, setQuizOpen] = useState(false);
-  const [currentQuiz, setCurrentQuiz] = useState(null);
-  const [learningStreak, setLearningStreak] = useState(0);
-  const [darkMode, setDarkMode] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [nextPageToken, setNextPageToken] = useState('');
-  const [categories, setCategories] = useState(['All', 'Investing', 'Budgeting', 'Credit', 'Taxes', 'Entrepreneurship', 'Retirement', 'Cryptocurrency', 'Coding', 'Cooking', 'College Life']);
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [isFullScreen, setIsFullScreen] = useState(false);
-  const [ratings, setRatings] = useState({});
-  const [comments, setComments] = useState({});
-  const [leaderboard, setLeaderboard] = useState([]);
-  const [userName, setUserName] = useState('');
-  const [showProfileModal, setShowProfileModal] = useState(false);
-  const [learningGoals, setLearningGoals] = useState([]);
-  const [showGoalModal, setShowGoalModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [userProgress, setUserProgress] = useState(() => {
+    const saved = localStorage.getItem('learning_progress');
+    return saved ? JSON.parse(saved) : { completed: [], xp: 0, level: 1, streak: 0 };
+  });
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [currentQuiz, setCurrentQuiz] = useState(null);
+  const [quizScore, setQuizScore] = useState(0);
+  const [activeTab, setActiveTab] = useState('courses');
+  const [selectedPath, setSelectedPath] = useState(null);
+  const [showVideoModal, setShowVideoModal] = useState(false);
+  const [nextPageToken, setNextPageToken] = useState('');
+  const [bookmarks, setBookmarks] = useState(() => {
+    const saved = localStorage.getItem('learning_bookmarks');
+    return saved ? JSON.parse(saved) : [];
+  });
+  
+  // Generate heatmap data for the current year
+  const [activityData, setActivityData] = useState(() => {
+    const saved = localStorage.getItem('learning_activity');
+    if (saved) return JSON.parse(saved);
+    
+    // Generate sample data for demonstration
+    const data = [];
+    const today = new Date();
+    for (let i = 0; i < 365; i++) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toISOString().split('T')[0];
+      
+      // Random activity (more recent = higher chance)
+      const chance = i < 30 ? 0.7 : i < 90 ? 0.5 : 0.3;
+      const hasActivity = Math.random() < chance;
+      
+      data.push({
+        date: dateStr,
+        count: hasActivity ? Math.floor(Math.random() * 5) + 1 : 0,
+        xp: hasActivity ? Math.floor(Math.random() * 50) + 10 : 0,
+      });
+    }
+    return data;
+  });
 
+  // Save progress
+  useEffect(() => {
+    localStorage.setItem('learning_progress', JSON.stringify(userProgress));
+  }, [userProgress]);
+
+  useEffect(() => {
+    localStorage.setItem('learning_bookmarks', JSON.stringify(bookmarks));
+  }, [bookmarks]);
+
+  // Fetch courses
   useEffect(() => {
     fetchCourses();
-    const storedStreak = localStorage.getItem('learningStreak');
-    if (storedStreak) {
-      setLearningStreak(parseInt(storedStreak));
-    }
-    const storedUserName = localStorage.getItem('userName');
-    if (storedUserName) {
-      setUserName(storedUserName);
-    } else {
-      setShowProfileModal(true);
-    }
-    generateLeaderboard();
   }, [selectedCategory]);
 
-  useEffect(() => {
-    localStorage.setItem('learningStreak', learningStreak.toString());
-  }, [learningStreak]);
-
   const fetchCourses = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(`${BASE_URL}/search`, {
         params: {
           part: 'snippet',
-          q: `${selectedCategory !== 'All' ? selectedCategory : 'financial literacy'} ${selectedCategory === 'All' ? 'for women and youth' : ''}`,
-          type: 'playlist',
-          maxResults: 15,
+          q: `${selectedCategory !== 'All' ? selectedCategory + ' finance' : 'financial literacy for beginners'}`,
+          type: 'video',
+          maxResults: 20,
           key: API_KEY,
         },
       });
-      setCourses(response.data.items);
+      
+      // Enrich with mock data
+      const enrichedCourses = response.data.items.map((item, index) => ({
+        ...item,
+        difficulty: ['Beginner', 'Intermediate', 'Advanced'][index % 3],
+        duration: `${Math.floor(Math.random() * 20 + 5)} min`,
+        rating: (Math.random() * 1 + 4).toFixed(1),
+        students: Math.floor(Math.random() * 50000 + 1000),
+        xp: Math.floor(Math.random() * 50 + 20),
+        category: selectedCategory === 'All' ? CATEGORIES[Math.floor(Math.random() * (CATEGORIES.length - 1)) + 1].id : selectedCategory,
+      }));
+      
+      setCourses(enrichedCourses);
     } catch (error) {
       console.error('Error fetching courses:', error);
+      // Fallback to mock data
+      setCourses(getMockCourses());
     }
+    setLoading(false);
   };
 
-  const fetchVideos = useCallback(async (playlistId, pageToken = '') => {
-    try {
-      const response = await axios.get(`${BASE_URL}/playlistItems`, {
-        params: {
-          part: 'snippet',
-          playlistId: playlistId,
-          maxResults: 15,
-          pageToken: pageToken,
-          key: API_KEY,
-        },
-      });
-      if (pageToken === '') {
-        setVideos(response.data.items);
-      } else {
-        setVideos(prevVideos => [...prevVideos, ...response.data.items]);
-      }
-      setNextPageToken(response.data.nextPageToken || '');
-      if (!currentVideo) {
-        setCurrentVideo(response.data.items[0]);
-      }
-    } catch (error) {
-      console.error('Error fetching videos:', error);
-    }
-  }, [currentVideo]);
+  const getMockCourses = () => [
+    { id: { videoId: '1' }, snippet: { title: 'Personal Finance Basics', description: 'Learn the fundamentals', thumbnails: { medium: { url: 'https://img.youtube.com/vi/0iR7x8uGNdc/mqdefault.jpg' } } }, difficulty: 'Beginner', duration: '15 min', rating: '4.8', students: 12500, xp: 30, category: 'Budgeting' },
+    { id: { videoId: '2' }, snippet: { title: 'Stock Market Investing', description: 'Start your investment journey', thumbnails: { medium: { url: 'https://img.youtube.com/vi/0iR7x8uGNdc/mqdefault.jpg' } } }, difficulty: 'Intermediate', duration: '25 min', rating: '4.9', students: 8500, xp: 50, category: 'Investing' },
+    { id: { videoId: '3' }, snippet: { title: 'Cryptocurrency Explained', description: 'Understanding digital currencies', thumbnails: { medium: { url: 'https://img.youtube.com/vi/0iR7x8uGNdc/mqdefault.jpg' } } }, difficulty: 'Advanced', duration: '30 min', rating: '4.7', students: 6200, xp: 60, category: 'Cryptocurrency' },
+  ];
 
   const handleCourseSelect = (course) => {
-    setSelectedCourse(course);
-    fetchVideos(course.id.playlistId);
-  };
-
-  const handleVideoSelect = (video) => {
-    setCurrentVideo(video);
-  };
-
-  const handleQuizCompletion = (score) => {
-    setUserScore(prevScore => {
-      const newScore = prevScore + score;
-      updateLeaderboard(newScore);
-      return newScore;
-    });
-    setQuizOpen(false);
-    setLearningStreak(prevStreak => prevStreak + 1);
-    if (learningStreak % 5 === 0) {
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 }
-      });
+    setCurrentVideo(course);
+    setShowVideoModal(true);
+    
+    // Update progress
+    if (!userProgress.completed.includes(course.id.videoId)) {
+      setUserProgress(prev => ({
+        ...prev,
+        xp: prev.xp + course.xp,
+        completed: [...prev.completed, course.id.videoId],
+      }));
+      
+      // Check level up
+      const newLevel = Math.floor((userProgress.xp + course.xp) / 100) + 1;
+      if (newLevel > userProgress.level) {
+        setUserProgress(prev => ({ ...prev, level: newLevel }));
+        confetti({ particleCount: 100, spread: 70 });
+      }
     }
   };
 
-  const generateQuiz = () => {
-    setCurrentQuiz({
-      questions: [
-        {
-          question: "What is compound interest?",
-          options: [
-            "Interest calculated on the initial principal only",
-            "Interest calculated on the initial principal and accumulated interest",
-            "A type of loan",
-            "A savings account"
-          ],
-          correctAnswer: 1
-        },
-        {
-          question: "Which of the following is considered a good debt?",
-          options: [
-            "Credit card debt",
-            "Payday loans",
-            "Student loans for education",
-            "High-interest personal loans"
-          ],
-          correctAnswer: 2
-        },
-        {
-          question: "What is diversification in investing?",
-          options: [
-            "Putting all your money in one stock",
-            "Spreading investments across various assets to reduce risk",
-            "Investing only in bonds",
-            "Keeping all your money in a savings account"
-          ],
-          correctAnswer: 1
-        }
-      ]
-    });
-    setQuizOpen(true);
-  };
-
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
-
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const filteredCourses = courses.filter(course =>
-    course.snippet.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const loadMoreVideos = () => {
-    if (selectedCourse && nextPageToken) {
-      fetchVideos(selectedCourse.id.playlistId, nextPageToken);
+  const startQuiz = (category) => {
+    const quiz = QUIZZES[category];
+    if (quiz) {
+      setCurrentQuiz({ questions: quiz, current: 0, score: 0 });
+      setShowQuiz(true);
     }
   };
 
-  const handleCategorySelect = (category) => {
-    setSelectedCategory(category);
+  const answerQuiz = (answer) => {
+    const isCorrect = answer === currentQuiz.questions[currentQuiz.current].correct;
+    const newScore = currentQuiz.score + (isCorrect ? 1 : 0);
+    
+    if (currentQuiz.current < currentQuiz.questions.length - 1) {
+      setCurrentQuiz(prev => ({ ...prev, current: prev.current + 1, score: newScore }));
+    } else {
+      // Quiz complete
+      const finalScore = newScore;
+      const reward = finalScore === currentQuiz.questions.length ? 100 : finalScore * 20;
+      setUserProgress(prev => ({ ...prev, xp: prev.xp + reward }));
+      setQuizScore(finalScore);
+      setTimeout(() => {
+        setShowQuiz(false);
+        setCurrentQuiz(null);
+      }, 2000);
+    }
   };
 
-  const toggleFullScreen = () => {
-    setIsFullScreen(!isFullScreen);
-  };
-
-  const handleRating = (courseId, rating) => {
-    setRatings(prevRatings => ({ ...prevRatings, [courseId]: rating }));
-  };
-
-  const handleComment = (courseId, comment) => {
-    setComments(prevComments => ({
-      ...prevComments,
-      [courseId]: [...(prevComments[courseId] || []), comment]
-    }));
-  };
-
-  const generateLeaderboard = () => {
-    const fakeUsers = [
-      { name: "Alice", score: 850 },
-      { name: "Bob", score: 720 },
-      { name: "Charlie", score: 690 },
-      { name: "Diana", score: 610 },
-      { name: "Evan", score: 580 }
-    ];
-    setLeaderboard([...fakeUsers, { name: userName, score: userScore }].sort((a, b) => b.score - a.score));
-  };
-
-  const updateLeaderboard = (newScore) => {
-    const updatedLeaderboard = leaderboard.map(user =>
-      user.name === userName ? { ...user, score: newScore } : user
+  const toggleBookmark = (courseId) => {
+    setBookmarks(prev => 
+      prev.includes(courseId) 
+        ? prev.filter(id => id !== courseId)
+        : [...prev, courseId]
     );
-    setLeaderboard(updatedLeaderboard.sort((a, b) => b.score - a.score));
   };
 
-  const handleProfileSubmit = (e) => {
-    e.preventDefault();
-    localStorage.setItem('userName', userName);
-    setShowProfileModal(false);
-    generateLeaderboard();
-  };
+  const filteredCourses = useMemo(() => {
+    return courses.filter(course => 
+      course.snippet.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [courses, searchTerm]);
 
-  const handleGoalSubmit = (e) => {
-    e.preventDefault();
-    const newGoal = e.target.elements.goal.value;
-    setLearningGoals([...learningGoals, { text: newGoal, completed: false }]);
-    setShowGoalModal(false);
-  };
+  const completedCount = userProgress.completed.length;
+  const totalCourses = courses.length;
+  const progressPercent = totalCourses > 0 ? (completedCount / totalCourses) * 100 : 0;
 
-  const toggleGoalCompletion = (index) => {
-    const updatedGoals = [...learningGoals];
-    updatedGoals[index].completed = !updatedGoals[index].completed;
-    setLearningGoals(updatedGoals);
+  // Render course card
+  const CourseCard = ({ course }) => {
+    const isCompleted = userProgress.completed.includes(course.id.videoId);
+    const isBookmarked = bookmarks.includes(course.id.videoId);
+    const categoryInfo = CATEGORIES.find(c => c.id === course.category) || CATEGORIES[0];
+    const Icon = categoryInfo.icon;
+
+    return (
+      <motion.div
+        layout
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        whileHover={{ y: -5, scale: 1.02 }}
+        className={`bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border ${isCompleted ? 'border-green-500/50' : 'border-white/10'} hover:border-white/30 transition-all cursor-pointer group`}
+        onClick={() => handleCourseSelect(course)}
+      >
+        <div className="relative aspect-video">
+          <img 
+            src={course.snippet.thumbnails?.medium?.url || `https://img.youtube.com/vi/${course.id.videoId}/mqdefault.jpg`} 
+            alt={course.snippet.title}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+          <div className="absolute top-2 right-2 flex gap-1">
+            <button 
+              onClick={(e) => { e.stopPropagation(); toggleBookmark(course.id.videoId); }}
+              className={`p-1.5 rounded-full ${isBookmarked ? 'bg-yellow-500/80' : 'bg-black/50'} hover:scale-110 transition-transform`}
+            >
+              <Bookmark size={14} className={isBookmarked ? 'text-white fill-white' : 'text-white'} />
+            </button>
+          </div>
+          <div className="absolute bottom-2 left-2 right-2">
+            <div className="flex items-center gap-2">
+              <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold bg-gradient-to-r ${categoryInfo.color} text-white`}>
+                {course.category}
+              </span>
+              <span className="px-2 py-0.5 rounded-full text-[10px] bg-black/50 text-white">
+                {course.difficulty}
+              </span>
+            </div>
+          </div>
+          {isCompleted && (
+            <div className="absolute top-2 left-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+              <CheckCircle size={14} className="text-white" />
+            </div>
+          )}
+        </div>
+        <div className="p-4">
+          <h3 className="font-bold text-sm mb-1 line-clamp-2 group-hover:text-purple-400 transition-colors">{course.snippet.title}</h3>
+          <p className="text-xs text-gray-400 line-clamp-2 mb-3">{course.snippet.description}</p>
+          <div className="flex items-center justify-between text-xs text-gray-500">
+            <div className="flex items-center gap-1">
+              <Clock size={12} />
+              {course.duration}
+            </div>
+            <div className="flex items-center gap-1">
+              <Star size={12} className="text-yellow-400" />
+              {course.rating}
+            </div>
+            <div className="flex items-center gap-1">
+              <Users size={12} />
+              {(course.students / 1000).toFixed(1)}k
+            </div>
+          </div>
+          <div className="mt-3 flex items-center justify-between">
+            <span className="text-xs text-purple-400 font-medium">+{course.xp} XP</span>
+            <button className="flex items-center gap-1 text-xs text-white bg-white/10 hover:bg-white/20 px-3 py-1 rounded-full transition-colors">
+              {isCompleted ? 'Review' : 'Start'} <Play size={12} />
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    );
   };
 
   return (
-    <div className={`financial-literacy-learning container mx-auto p-4 ${darkMode ? 'bg-gray-900 text-white' : 'bg-gradient-to-r from-blue-100 to-purple-100 text-gray-900'} ${isFullScreen ? 'fixed inset-0 z-50 overflow-auto' : ''}`}>
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex justify-between items-center mb-6"
-      >
-        <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">Financial Wisdom Hub</h2>
-        <div className="flex items-center">
-          <button onClick={toggleFullScreen} className="btn btn-circle mr-2 bg-purple-500 hover:bg-purple-600">
-            <FaExpandAlt />
+    <div className="fixed inset-0 bg-black/90 backdrop-blur-xl z-50 overflow-hidden">
+      {/* Header */}
+      <header className="flex items-center justify-between p-4 border-b border-white/10">
+        <div className="flex items-center gap-4">
+          <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
+            <X size={24} />
           </button>
-          <button onClick={toggleDarkMode} className="btn btn-circle bg-yellow-500 hover:bg-yellow-600">
-            {darkMode ? <FaSun /> : <FaMoon />}
+          <div>
+            <h1 className="text-xl font-bold flex items-center gap-2">
+              <GraduationCap className="text-purple-400" />
+              Learning Hub
+            </h1>
+            <p className="text-xs text-gray-400">Master financial literacy</p>
+          </div>
+        </div>
+        
+        <div className="flex items-center gap-4">
+          {/* User Stats */}
+          <div className="hidden md:flex items-center gap-3">
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-purple-500/20 rounded-full">
+              <Crown size={16} className="text-purple-400" />
+              <span className="text-sm font-bold">Level {userProgress.level}</span>
+            </div>
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/20 rounded-full">
+              <Star size={16} className="text-blue-400" />
+              <span className="text-sm font-bold">{userProgress.xp} XP</span>
+            </div>
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-orange-500/20 rounded-full">
+              <Flame size={16} className="text-orange-400" />
+              <span className="text-sm font-bold">{userProgress.streak} Day Streak</span>
+            </div>
+          </div>
+          
+          <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full">
+            <X size={20} />
           </button>
         </div>
-      </motion.div>
-      
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="mb-4"
-      >
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Explore financial wisdom..."
-            className={`w-full p-3 pl-10 rounded-lg border border-purple-300 focus:border-purple-500 focus:ring focus:ring-purple-200 focus:outline-none ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}
-            value={searchTerm}
-            onChange={handleSearch}
-          />
-          <FaSearch className="absolute left-3 top-3 text-purple-400" />
-        </div>
-      </motion.div>
+      </header>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
-        className="mb-4 flex flex-wrap"
-      >
-        {categories.map((category, index) => (
-          <motion.button
-            key={category}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => handleCategorySelect(category)}
-            className={`btn mr-2 mb-2 ${selectedCategory === category ? 'bg-purple-600 text-white' : 'bg-white text-purple-600'} border-2 border-purple-600 hover:bg-purple-100`}
-            style={{ animationDelay: `${index * 0.1}s` }}
-          >
-            {category}
-          </motion.button>
-        ))}
-      </motion.div>
-      
-      <AnimatePresence>
-        {!selectedCourse ? (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="course-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {filteredCourses.map((course) => (
-              <motion.div
-                key={course.id.playlistId}
-                className={`card ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-xl cursor-pointer overflow-hidden`}
-                whileHover={{ scale: 1.05, boxShadow: "0px 10px 20px rgba(0,0,0,0.2)" }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => handleCourseSelect(course)}
+      <div className="flex h-[calc(100vh-80px)]">
+        {/* Sidebar */}
+        <aside className="w-64 border-r border-white/10 hidden lg:block p-4 overflow-y-auto">
+          {/* Progress Card */}
+          <div className="p-4 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-2xl border border-purple-500/30 mb-6">
+            <h3 className="font-bold mb-2">Your Progress</h3>
+            <div className="flex justify-between text-sm mb-2">
+              <span className="text-gray-400">{completedCount} of {totalCourses}</span>
+              <span className="text-purple-400">{progressPercent.toFixed(0)}%</span>
+            </div>
+            <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+              <motion.div 
+                className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
+                initial={{ width: 0 }}
+                animate={{ width: `${progressPercent}%` }}
+              />
+            </div>
+          </div>
+
+          {/* Navigation */}
+          <nav className="space-y-1">
+            {[
+              { id: 'courses', icon: BookOpen, label: 'All Courses' },
+              { id: 'paths', icon: Target, label: 'Learning Paths' },
+              { id: 'bookmarks', icon: Bookmark, label: 'Bookmarks' },
+              { id: 'achievements', icon: Trophy, label: 'Achievements' },
+            ].map(item => (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === item.id ? 'bg-white/10 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}
               >
-                <figure className="relative">
-                  {course.snippet.thumbnails && course.snippet.thumbnails.medium && (
-                    <img src={course.snippet.thumbnails.medium.url} alt={course.snippet.title} className="w-full h-48 object-cover" />
-                  )}
-                  <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
-                    <p className="text-white text-lg font-bold">Start Learning</p>
-                  </div>
-                </figure>
-                <div className="card-body">
-                  <h3 className="card-title text-lg font-semibold">{course.snippet.title}</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">{course.snippet.description.slice(0, 100)}...</p>
-                  <div className="flex items-center mt-2">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <FaStar
-                        key={star}
-                        className={`cursor-pointer ${star <= (ratings[course.id.playlistId] || 0) ? 'text-yellow-400' : 'text-gray-300'}`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRating(course.id.playlistId, star);
-                        }}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
+                <item.icon size={18} />
+                {item.label}
+              </button>
             ))}
-          </motion.div>
-        ) : (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="selected-course"
-          >
-            <button
-              onClick={() => setSelectedCourse(null)}
-              className="btn bg-purple-600 hover:bg-purple-700 text-white mb-4"
-            >
-              Back to Courses
-            </button>
-            <h3 className="text-2xl font-bold mb-4">{selectedCourse.snippet.title}</h3>
-            <div className="flex flex-col lg:flex-row">
-              <div className="video-player w-full lg:w-3/4 mb-4 lg:mb-0">
-                {currentVideo && (
-                  <div className="relative rounded-lg overflow-hidden shadow-lg">
-                    <iframe
-                      width="100%"
-                      height="480"
-                      src={`https://www.youtube.com/embed/${currentVideo.snippet.resourceId.videoId}`}
-                      title={currentVideo.snippet.title}
-                      frameBorder="0"
-                      allowFullScreen
-                      className="w-full"
-                    ></iframe>
-                    <div className={`p-4 ${darkMode ? 'bg-gray-800' : 'bg-gray-100'}`}>
-                      <h4 className="text-xl font-semibold mb-2">{currentVideo.snippet.title}</h4>
-                      <p className="text-sm text-gray-600 dark:text-gray-300">{currentVideo.snippet.description}</p>
-                    </div>
-                    <div className="mt-4 flex justify-between items-center">
-                      <button onClick={generateQuiz} className="btn bg-green-500 hover:bg-green-600 text-white">Take Quiz</button>
-                      <div className="flex items-center">
-                        <FaGraduationCap className="text-purple-500 mr-2" />
-                        <span>Learning Streak: {learningStreak} days</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                <div className="mt-8">
-                  <h4 className="text-2xl font-bold mb-4">Learning Goals</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {learningGoals.map((goal, index) => (
-                      <motion.div
-                        key={index}
-                        className={`p-4 rounded-lg shadow ${goal.completed ? 'bg-green-100 dark:bg-green-800' : 'bg-white dark:bg-gray-700'}`}
-                        whileHover={{ scale: 1.05 }}
-                      >
-                        <div className="flex items-center">
-                          <input
-                            type="checkbox"
-                            checked={goal.completed}
-                            onChange={() => toggleGoalCompletion(index)}
-                            className="mr-3"
-                          />
-                          <span className={goal.completed ? 'line-through' : ''}>{goal.text}</span>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                  <button
-                    onClick={() => setShowGoalModal(true)}
-                    className="mt-4 btn bg-blue-500 hover:bg-blue-600 text-white"
-                  >
-                    Add Learning Goal
-                  </button>
-                </div>
-              </div>
-              <div className="video-list w-full lg:w-1/4 lg:ml-4 overflow-y-auto max-h-[600px]">
-                <h4 className="text-xl font-bold mb-4">Course Videos</h4>
-                <InfiniteScroll
-                  dataLength={videos.length}
-                  next={loadMoreVideos}
-                  hasMore={!!nextPageToken}
-                  loader={<h4>Loading...</h4>}
-                  scrollableTarget="scrollableDiv"
+          </nav>
+
+          {/* Categories */}
+          <div className="mt-6">
+            <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-4">Categories</h4>
+            <div className="space-y-1">
+              {CATEGORIES.map(cat => (
+                <button
+                  key={cat.id}
+                  onClick={() => { setSelectedCategory(cat.id); setActiveTab('courses'); }}
+                  className={`w-full flex items-center gap-3 px-4 py-2 rounded-xl transition-all ${selectedCategory === cat.id ? 'bg-white/10 text-white' : 'text-gray-400 hover:bg-white/5'}`}
                 >
-                  {videos.map((video) => (
+                  <cat.icon size={16} />
+                  <span className="text-sm">{cat.name}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          {/* Contribution Heatmap - Daily Streak */}
+          <div className="mt-6">
+            <ContributionHeatmap 
+              data={activityData}
+              colorScheme="purple"
+              onDayClick={(day) => console.log('Clicked:', day)}
+            />
+          </div>
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1 overflow-y-auto p-4 md:p-6">
+          {/* Search Bar */}
+          <div className="flex gap-4 mb-6">
+            <div className="flex-1 relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+              <input
+                type="text"
+                placeholder="Search courses..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-purple-500 focus:outline-none"
+              />
+            </div>
+            <button className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors">
+              <Filter size={20} />
+            </button>
+          </div>
+
+          {activeTab === 'courses' && (
+            <>
+              {/* Featured Section */}
+              {!searchTerm && selectedCategory === 'All' && (
+                <div className="mb-8">
+                  <h2 className="text-xl font-bold mb-4">Continue Learning</h2>
+                  {courses[0] && (
                     <motion.div
-                      key={video.id}
-                      className={`video-item p-2 cursor-pointer ${
-                        darkMode ? 'bg-gray-800 hover:bg-gray-700' : 'bg-white hover:bg-gray-100'
-                      } ${currentVideo && currentVideo.id === video.id ? 'border-l-4 border-purple-500' : ''}`}
-                      onClick={() => handleVideoSelect(video)}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="relative rounded-2xl overflow-hidden"
+                      onClick={() => handleCourseSelect(courses[0])}
                     >
-                      <div className="flex items-center">
-                        {video.snippet.thumbnails && video.snippet.thumbnails.default && (
-                          <img
-                            src={video.snippet.thumbnails.default.url}
-                            alt={video.snippet.title}
-                            className="w-20 h-20 object-cover rounded-md mr-3"
-                          />
-                        )}
-                        <p className="text-sm font-medium">{video.snippet.title}</p>
+                      <img 
+                        src={courses[0].snippet.thumbnails?.medium?.url} 
+                        alt="Featured"
+                        className="w-full h-48 md:h-64 object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                      <div className="absolute bottom-0 left-0 right-0 p-6">
+                        <span className="px-3 py-1 bg-purple-500 rounded-full text-xs font-bold mb-2 inline-block">Featured</span>
+                        <h3 className="text-xl font-bold mb-1">{courses[0].snippet.title}</h3>
+                        <p className="text-gray-300 text-sm mb-3">{courses[0].snippet.description}</p>
+                        <button className="flex items-center gap-2 px-6 py-2 bg-white text-black rounded-full font-bold hover:bg-gray-200 transition-colors">
+                          <Play size={16} /> Start Learning
+                        </button>
                       </div>
                     </motion.div>
-                  ))}
-                </InfiniteScroll>
+                  )}
+                </div>
+              )}
+
+              {/* Course Grid */}
+              <div>
+                <h2 className="text-xl font-bold mb-4">
+                  {selectedCategory === 'All' ? 'All Courses' : `${selectedCategory} Courses`}
+                  <span className="text-sm font-normal text-gray-400 ml-2">({filteredCourses.length})</span>
+                </h2>
+                
+                {loading ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {[1, 2, 3, 4, 5, 6].map(i => (
+                      <div key={i} className="bg-white/5 rounded-2xl h-64 animate-pulse" />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {filteredCourses.map(course => (
+                      <CourseCard key={course.id.videoId} course={course} />
+                    ))}
+                  </div>
+                )}
               </div>
-            </div>
-            <div className="mt-8">
-              <h4 className="text-2xl font-bold mb-4">Discussion</h4>
-              <div className={`rounded-lg shadow p-4 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-                {comments[selectedCourse.id.playlistId] && comments[selectedCourse.id.playlistId].map((comment, index) => (
+            </>
+          )}
+
+          {activeTab === 'paths' && (
+            <div>
+              <h2 className="text-xl font-bold mb-6">Learning Paths</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {LEARNING_PATHS.map(path => (
                   <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className={`mb-4 p-3 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}
+                    key={path.id}
+                    whileHover={{ y: -5 }}
+                    className="p-6 bg-white/5 rounded-2xl border border-white/10 hover:border-white/30 transition-all cursor-pointer"
+                    onClick={() => setSelectedPath(path)}
                   >
-                    <p className="text-sm">{comment}</p>
+                    <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${path.color} flex items-center justify-center mb-4`}>
+                      <path.icon size={28} className="text-white" />
+                    </div>
+                    <h3 className="text-lg font-bold mb-1">{path.title}</h3>
+                    <p className="text-sm text-gray-400 mb-4">{path.description}</p>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {path.courses.map(c => (
+                        <span key={c} className="px-2 py-1 bg-white/10 rounded text-xs">{c}</span>
+                      ))}
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-purple-400">Reward: {path.reward.coins} coins</span>
+                      <ChevronRight size={16} className="text-gray-400" />
+                    </div>
                   </motion.div>
                 ))}
-                <textarea
-                  className={`w-full p-2 rounded-lg border ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
-                  placeholder="Share your thoughts..."
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      handleComment(selectedCourse.id.playlistId, e.target.value);
-                      e.target.value = '';
-                    }
-                  }}
-                ></textarea>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'bookmarks' && (
+            <div>
+              <h2 className="text-xl font-bold mb-6">Bookmarked Courses</h2>
+              {bookmarks.length === 0 ? (
+                <div className="text-center py-12">
+                  <Bookmark size={48} className="mx-auto mb-4 text-gray-600" />
+                  <p className="text-gray-400">No bookmarks yet</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {courses.filter(c => bookmarks.includes(c.id.videoId)).map(course => (
+                    <CourseCard key={course.id.videoId} course={course} />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </main>
+      </div>
+
+      {/* Video Modal */}
+      <AnimatePresence>
+        {showVideoModal && currentVideo && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4"
+          >
+            <div className="w-full max-w-4xl">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="font-bold">{currentVideo.snippet.title}</h3>
+                <button onClick={() => setShowVideoModal(false)} className="p-2 hover:bg-white/10 rounded-full">
+                  <X size={24} />
+                </button>
+              </div>
+              <div className="aspect-video bg-black rounded-xl overflow-hidden">
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src={`https://www.youtube.com/embed/${currentVideo.id.videoId}?autoplay=1`}
+                  title="YouTube video player"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+              <div className="mt-4 flex gap-4">
+                <button className="flex items-center gap-2 px-4 py-2 bg-green-500/20 text-green-400 rounded-full">
+                  <ThumbsUp size={18} /> Helpful
+                </button>
+                <button className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
+                  <MessageCircle size={18} /> Comment
+                </button>
+                <button className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
+                  <Share2 size={18} /> Share
+                </button>
               </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6 }}
-        className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8"
-      >
-        <div className={`stats shadow ${darkMode ? 'bg-gray-800 text-white' : 'bg-white'}`}>
-          <div className="stat">
-            <div className="stat-figure text-primary">
-              <FaStar size={24} className="text-yellow-400" />
-            </div>
-            <div className="stat-title">Your Score</div>
-            <div className="stat-value text-primary">{userScore}</div>
-          </div>
-          
-          <div className="stat">
-            <div className="stat-figure text-secondary">
-              <FaChartLine size={24} className="text-green-500" />
-            </div>
-            <div className="stat-title">Learning Streak</div>
-            <div className="stat-value text-secondary">{learningStreak}</div>
-          </div>
-        </div>
-
-        <div className={`p-4 rounded-lg shadow ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-          <h3 className="text-xl font-bold mb-4">Financial Health Tracker</h3>
-          <ResponsiveContainer width="100%" height={200}>
-            <LineChart data={[
-              { month: 'Jan', savings: 1000, investment: 500 },
-              { month: 'Feb', savings: 1200, investment: 600 },
-              { month: 'Mar', savings: 1100, investment: 700 },
-              { month: 'Apr', savings: 1400, investment: 800 },
-            ]}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="savings" stroke="#8884d8" />
-              <Line type="monotone" dataKey="investment" stroke="#82ca9d" />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8 }}
-        className="mt-8"
-      >
-        <h3 className="text-2xl font-bold mb-4">Leaderboard</h3>
-        <div className={`overflow-x-auto rounded-lg shadow ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-          <table className="table w-full">
-            <thead>
-              <tr className="bg-purple-500 text-white">
-                <th>Rank</th>
-                <th>Name</th>
-                <th>Score</th>
-              </tr>
-            </thead>
-            <tbody>
-              {leaderboard.map((user, index) => (
-                <tr key={index} className={index % 2 === 0 ? (darkMode ? 'bg-gray-700' : 'bg-gray-100') : ''}>
-                  <td>{index + 1}</td>
-                  <td>{user.name}</td>
-                  <td>{user.score}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </motion.div>
-
-      {showProfileModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      {/* Quiz Modal */}
+      <AnimatePresence>
+        {showQuiz && currentQuiz && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            className={`${darkMode ? 'bg-gray-800' : 'bg-white'} p-6 rounded-lg max-w-md w-full`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
           >
-            <h3 className="text-2xl font-bold mb-4">Welcome to Financial Wisdom Hub!</h3>
-            <form onSubmit={handleProfileSubmit}>
-              <input
-                type="text"
-                placeholder="Enter your name"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-                className={`w-full p-2 mb-4 rounded-lg border ${darkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300'}`}
-                required
-              />
-              <button type="submit" className="btn bg-purple-600 hover:bg-purple-700 text-white w-full">
-                Start Learning
-              </button>
-            </form>
-          </motion.div>
-        </div>
-      )}
-
-      {showGoalModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            className={`${darkMode ? 'bg-gray-800' : 'bg-white'} p-6 rounded-lg max-w-md w-full`}
-          >
-            <h3 className="text-2xl font-bold mb-4">Set a New Learning Goal</h3>
-            <form onSubmit={handleGoalSubmit}>
-              <input
-                type="text"
-                name="goal"
-                placeholder="Enter your learning goal"
-                className={`w-full p-2 mb-4 rounded-lg border ${darkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300'}`}
-                required
-              />
-              <button type="submit" className="btn bg-blue-500 hover:bg-blue-600 text-white w-full">
-                Add Goal
-              </button>
-            </form>
-          </motion.div>
-        </div>
-      )}
-
-      {quizOpen && currentQuiz && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            className={`${darkMode ? 'bg-gray-800' : 'bg-white'} p-6 rounded-lg max-w-lg w-full`}
-          >
-            <h3 className="text-2xl font-bold mb-4">Financial Literacy Quiz</h3>
-            {currentQuiz.questions.map((q, index) => (
-              <div key={index} className="mb-4">
-                <p className="font-semibold">{q.question}</p>
-                {q.options.map((option, optionIndex) => (
-                  <label key={optionIndex} className="block mt-2">
-                    <input type="radio" name={`question-${index}`} value={optionIndex} className="mr-2" />
-                    {option}
-                  </label>
+            <div className="w-full max-w-lg bg-gray-900 rounded-2xl p-6 border border-white/20">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-bold">Quiz</h3>
+                <span className="text-sm text-gray-400">{currentQuiz.current + 1} / {currentQuiz.questions.length}</span>
+              </div>
+              <p className="text-lg mb-6">{currentQuiz.questions[currentQuiz.current].q}</p>
+              <div className="space-y-3">
+                {currentQuiz.questions[currentQuiz.current].options.map((opt, i) => (
+                  <button
+                    key={i}
+                    onClick={() => answerQuiz(i)}
+                    className="w-full p-4 bg-white/5 hover:bg-white/10 rounded-xl text-left transition-colors"
+                  >
+                    {opt}
+                  </button>
                 ))}
               </div>
-            ))}
-            <button onClick={() => handleQuizCompletion(10)} className="btn bg-green-500 hover:bg-green-600 text-white w-full mt-4">
-              Submit Quiz
-            </button>
+            </div>
           </motion.div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </div>
   );
 };

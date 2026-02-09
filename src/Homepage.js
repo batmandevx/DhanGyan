@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import { Menu, X, ChevronRight, Facebook, Twitter, Instagram, Linkedin, ArrowRight, Sparkles, Zap, Flame, Wind, Droplets, Award, ChevronDown, Star, Scroll, Trophy, Target, Calendar, Pencil, Milestone, Play, Share2 } from 'lucide-react';
+import Shuffle from './components/Shuffle';
 import GuildSystem from './GuildSystem';
 import DailyChallenge from './DailyChallenge.js';
 import PlayerProfile from './PlayerProfile';
@@ -133,7 +134,23 @@ const DhanGyanHomepage = () => {
       {/* Main Content */}
       <main className="p-4 md:p-8">
         <section className="text-center mb-12 animate-fade-in-up">
-          <h1 className="text-6xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-500">Dhan Gyan</h1>
+          <div className="mb-4">
+            <Shuffle
+              text="Dhan Gyan"
+              tag="h1"
+              className="text-6xl md:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-500"
+              shuffleDirection="right"
+              duration={0.4}
+              shuffleTimes={2}
+              animationMode="evenodd"
+              ease="power3.out"
+              stagger={0.04}
+              triggerOnce={true}
+              triggerOnHover={true}
+              colorFrom="#fde047"
+              colorTo="#ec4899"
+            />
+          </div>
           <TypewriterEffect words={typewriterWords} />
           <p className="text-xl mb-8">Empowering women and youth with financial literacy</p>
           <button className="bg-yellow-400 text-blue-600 px-8 py-3 rounded-full font-semibold text-lg hover:bg-white transition-all duration-300 transform hover:scale-110 animate-pulse">Get Started</button>

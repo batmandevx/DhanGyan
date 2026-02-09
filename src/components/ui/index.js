@@ -131,6 +131,7 @@ export const ProgressBar = ({ progress = 0, color = 'purple', className = '' }) 
     green: 'from-green-500 to-emerald-500',
     blue: 'from-blue-500 to-cyan-500',
     yellow: 'from-yellow-500 to-orange-500',
+    gray: 'from-gray-500 to-gray-400',
   };
 
   return (
@@ -257,3 +258,10 @@ export default {
   Tooltip,
   StatCard,
 };
+
+// Language Components
+export { default as LanguageSelector, LanguageToggle, LanguageFlag } from './LanguageSelector';
+// Heatmap
+export { default as ContributionHeatmap, MiniHeatmap } from './ContributionHeatmap';
+// Text Animations
+export { default as Shuffle } from '../Shuffle';

@@ -1,509 +1,434 @@
-<div align="center">
+# 🎯 DhanGyan - Modern Financial Learning Platform
 
-# 🌟 Dhan Gyan - Financial Literacy Platform
+[![React](https://img.shields.io/badge/React-18.x-61DAFB?logo=react)](https://reactjs.org/)
+[![Firebase](https://img.shields.io/badge/Firebase-Latest-FFCA28?logo=firebase)](https://firebase.google.com/)
+[![GSAP](https://img.shields.io/badge/GSAP-Latest-88CE02?logo=greensock)](https://greensock.com/)
+[![Tailwind](https://img.shields.io/badge/Tailwind-CSS-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![React](https://img.shields.io/badge/React-18.3.1-blue.svg)](https://reactjs.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4.7-38B2AC.svg)](https://tailwindcss.com/)
-[![Firebase](https://img.shields.io/badge/Firebase-10.12.5-FFCA28.svg)](https://firebase.google.com/)
-
-**Empowering Women and Youth with Financial Literacy through AI-Powered Learning**
-
-[Features](#-features) • [Installation](#-installation) • [Usage](#-usage) • [Tech Stack](#-tech-stack) • [Contributing](#-contributing)
-
-</div>
-
----
-
-## 📖 About Dhan Gyan
-
-**Dhan Gyan** (धन ज्ञान) is a revolutionary financial literacy platform designed to bridge the gap in financial education, especially for women and youth. Our mission is to provide accessible, engaging, and personalized learning experiences through innovative AI-powered courses, interactive challenges, and a supportive community.
-
-### 🎯 Our Vision
-
-To create a financially literate society where everyone has the knowledge and tools to make informed financial decisions and achieve financial independence.
-
-### 💡 Key Highlights
-
-- 🤖 **AI-Powered Learning** - Personalized financial education with AI assistance
-- 🎮 **Gamified Experience** - Learn through interactive challenges and quests
-- 🌐 **Multi-language Support** - Available in English, Spanish, French, German, and Hindi
-- 👥 **Community-Driven** - Connect with peers and mentors for guidance
-- 📊 **Progress Tracking** - Monitor your financial literacy journey with detailed analytics
+**DhanGyan** is a gamified financial literacy platform that makes learning about money management fun and engaging through AI-powered features, interactive challenges, and community-driven learning.
 
 ---
 
 ## ✨ Features
 
-### 🤖 AI Chat Assistant
-- **Gyan AI** - Your personal financial assistant powered by Google Gemini API
-- Voice recognition and text-to-speech capabilities
-- Image analysis for visual financial queries
-- Real-time weather integration
-- Syntax highlighting for code snippets
-- Dark/Light theme support
+### 🤖 AI-Powered Learning
+- **AI Chat Assistant** - Get instant answers to financial questions
+- **Personalized Learning** - AI adapts to your knowledge level
+- **Smart Recommendations** - Curated content based on your progress
 
-### 📝 Financial Quiz
-- **Multi-language support** (English, Spanish, French, German, Hindi)
-- **Three difficulty levels** (Easy, Medium, Hard)
-- **Timed challenges** with streak bonuses
-- **Category-based scoring** with radar chart visualization
-- **Hint system** with point penalties
-- **Confetti celebrations** for achievements
+### 🎮 Gamification
+- **Guild System** - Join teams and compete together
+- **Daily Challenges** - Complete tasks to earn rewards
+- **Leaderboards** - Track your progress against peers
+- **Badge System** - Unlock achievements as you learn
+- **XP & Levels** - Level up your financial knowledge
 
-### 🏰 Guild System
-- **Three specialized communities**:
-  - 💰 **Savings Champions** - Budgeting & Saving (Beginner)
-  - 📈 **Investment Wizards** - Investing strategies (Intermediate)
-  - 🏆 **Financial Freedom Seekers** - Debt Management (Advanced)
-- **3D animated emblems** using React Three Fiber
-- **Community perks** and shared resources
-- **Member rankings** and progress tracking
+### 📚 Learning Modules
+- **Financial Literacy Learning** - Structured courses
+- **Interactive Quizzes** - Test your knowledge
+- **Financial Calculator** - Plan your budget and investments
+- **Real-world Scenarios** - Practice with simulations
 
-### 📅 Daily Challenges
-- **Dynamic quest system** with varying difficulty
-- **Financial IQ tracking** with level progression
-- **Streak bonuses** for consecutive completions
-- **Particle animations** and confetti rewards
-- **Time-limited challenges** for engagement
+### 🎨 Modern UI/UX
+- **Glassmorphism Design** - Sleek, modern interface
+- **Smooth Animations** - GSAP, Framer Motion, AOS
+- **Particle Effects** - Dynamic backgrounds
+- **Responsive Design** - Works on all devices
 
-### 👤 Player Profile
-- **Comprehensive stats dashboard** with radar charts
-- **Quest tracking** with progress bars
-- **Achievement system** with milestones
-- **Timeline view** of player journey
-- **Guild information** and perks display
-- **Friend comparison** mode
-
-### 🛒 AI Marketplace
-- **Multi-category listings** (Courses, Skills, Cooking, Coding, Services, etc.)
-- **Shopping cart** with checkout functionality
-- **Favorites system** for saved items
-- **Search and filter** capabilities
-- **User-generated listings** with image uploads
-- **Payment integration** (Card, UPI)
-
-### 📚 Financial Literacy Learning
-- **YouTube integration** for curated financial content
-- **Course playlists** with video playback
-- **Infinite scroll** for continuous learning
-- **Quiz generation** based on content
-- **Learning goals** with progress tracking
-- **Discussion forums** for community engagement
-- **Leaderboard** for competitive learning
-
-### ✍️ AI Scribble
-- **Hand gesture recognition** using TensorFlow.js
-- **Gesture-based drawing** controls:
-  - 👆 **Point** - Draw mode
-  - ✌️ **Peace** - Color picker
-  - 🖐️ **Palm** - Eraser mode
-  - ✊ **Fist** - Move mode
-  - 👍 **Thumbs Up** - Shape recognition
-  - 🤏 **Pinch** - Toggle writing mode
-- **Shape recognition** (circle, rectangle, triangle, line, arrow)
-- **Undo/Redo** functionality
-- **Layer management** system
-- **Download drawings** as PNG
-
-### 📁 Live File Sharing
-- **Drag & drop** file upload
-- **UploadCare integration** for cloud storage
-- **URL shortening** with TinyURL API
-- **QR code generation** for easy sharing
-- **Dark/Light mode** support
-- **Animated particle effects**
-
-### 🔐 Authentication
-- **Login/Signup** with Firebase
-- **User profile management**
-- **Session persistence**
+### 🌐 Community Features
+- **AI Marketplace** - Buy and sell AI-generated content
+- **AI Scribble** - Collaborative drawing
+- **Live File Sharing** - Share resources instantly
+- **Social Profiles** - Connect with learners
 
 ---
 
-## 🚀 Installation
+## 🚀 Quick Start
 
 ### Prerequisites
-
 - Node.js (v16 or higher)
 - npm or yarn
-- Git
+- Firebase account (for backend)
+- Gemini API key (for AI features)
 
-### Step-by-Step Setup
+### Installation
 
 1. **Clone the repository**
-   ```bash
-   git clone https://github.com/batmandevx/DhanGyan.git
-   cd DhanGyan
-   ```
+```bash
+git clone <repository-url>
+cd DhanGyan-master
+```
 
 2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+```bash
+npm install
+```
 
-3. **Set up environment variables**
-   
-   Create a `.env` file in the root directory:
-   ```env
-   # Firebase Configuration
-   REACT_APP_FIREBASE_API_KEY=your_firebase_api_key
-   REACT_APP_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-   REACT_APP_FIREBASE_PROJECT_ID=your_project_id
-   REACT_APP_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
-   REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-   REACT_APP_FIREBASE_APP_ID=your_app_id
+3. **Configure environment variables**
 
-   # Google Gemini API
-   REACT_APP_GEMINI_API_KEY=your_gemini_api_key
+Create a `.env` file in the root directory:
 
-   # Weather API
-   REACT_APP_WEATHER_API_KEY=your_weather_api_key
+```env
+# Firebase Configuration
+REACT_APP_FIREBASE_API_KEY=your_firebase_api_key
+REACT_APP_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+REACT_APP_FIREBASE_PROJECT_ID=your_project_id
+REACT_APP_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+REACT_APP_FIREBASE_APP_ID=your_app_id
 
-   # Picovoice (for voice recognition)
-   REACT_APP_PICOVOICE_ACCESS_KEY=your_picovoice_key
+# Google Gemini API
+REACT_APP_GEMINI_API_KEY=your_gemini_api_key
 
-   # UploadCare
-   REACT_APP_UPLOADCARE_PUBLIC_KEY=your_uploadcare_key
+# Weather API
+REACT_APP_WEATHER_API_KEY=your_weather_api_key
 
-   # TinyURL
-   REACT_APP_TINYURL_API_KEY=your_tinyurl_key
-   ```
+# Optional APIs
+REACT_APP_PICOVOICE_ACCESS_KEY=your_picovoice_key
+REACT_APP_UPLOADCARE_PUBLIC_KEY=your_uploadcare_key
+REACT_APP_TINYURL_API_KEY=your_tinyurl_key
+```
 
 4. **Start the development server**
-   ```bash
-   npm start
-   ```
+```bash
+npm start
+```
 
-5. **Open your browser**
-   
-   Navigate to `http://localhost:3000`
-
----
-
-## 📖 Usage
-
-### Getting Started
-
-1. **Create an Account** - Click on "Sign Up" to create your profile
-2. **Complete Your Profile** - Add your details and preferences
-3. **Join a Guild** - Choose a community that matches your financial goals
-4. **Start Learning** - Explore courses, take quizzes, and complete daily challenges
-
-### Main Navigation
-
-- **Sidebar Menu** - Access all features from the collapsible sidebar
-- **AI Chat** - Click the floating chat button to interact with Gyan AI
-- **Leaderboard** - View top performers and track your ranking
-- **Government Schemes** - Quick access to official financial schemes
-
-### Tips for Success
-
-- 🎯 **Complete daily challenges** to maintain your streak
-- 📚 **Watch courses** to increase your knowledge score
-- 🏆 **Join a guild** for community support and bonuses
-- 🤖 **Use AI Chat** for personalized financial advice
-- 📊 **Track your progress** in the player profile
-
----
-
-## 🛠️ Tech Stack
-
-### Frontend Framework
-- **React 18.3.1** - UI library
-- **React Router DOM 6.26.0** - Client-side routing
-
-### Styling & UI
-- **Tailwind CSS 3.4.7** - Utility-first CSS framework
-- **Framer Motion 11.3.24** - Animation library
-- **DaisyUI 4.12.10** - Component library
-- **Radix UI** - Headless UI components
-
-### 3D & Graphics
-- **Three.js 0.167.0** - 3D graphics library
-- **React Three Fiber 8.16.8** - React renderer for Three.js
-- **React Three Drei 9.109.2** - Helper components for R3F
-- **React Three Postprocessing 2.16.2** - Post-processing effects
-
-### AI & Machine Learning
-- **TensorFlow.js 4.20.0** - Machine learning library
-- **@tensorflow-models/handpose 0.1.0** - Hand pose detection
-- **Picovoice Leopard 2.0.2** - Speech-to-text
-- **Picovoice Picovoice 3.0.3** - Wake word detection
-
-### Charts & Visualization
-- **Recharts 2.12.7** - Chart library
-- **React Chart.js 2 5.2.0** - Chart.js wrapper
-- **Chart.js 4.4.3** - Charting library
-
-### Backend & APIs
-- **Firebase 10.12.5** - Backend-as-a-Service
-- **Axios 1.7.3** - HTTP client
-- **Google Gemini API** - AI chat functionality
-- **YouTube Data API v3** - Video content
-- **WeatherAPI.com** - Weather data
-
-### File Handling
-- **React Dropzone 14.2.3** - File upload
-- **UploadCare React Widget 2.4.5** - Cloud storage
-- **QRCode.react 3.1.0** - QR code generation
-
-### Utilities
-- **Lucide React 0.416.0** - Icon library
-- **Canvas Confetti 1.9.3** - Confetti effects
-- **React Toastify 10.0.5** - Toast notifications
-- **React Syntax Highlighter 15.5.0** - Code highlighting
-- **React Colorful 5.6.1** - Color picker
-- **js-simplify 1.0.0** - Shape recognition
-
-### Development Tools
-- **React Scripts 5.0.1** - Build tooling
-- **PostCSS 8.4.40** - CSS processing
-- **Autoprefixer 10.4.19** - CSS vendor prefixes
+The app will open at [http://localhost:3000](http://localhost:3000)
 
 ---
 
 ## 📁 Project Structure
 
 ```
-DhanGyan/
-├── public/                 # Static assets
-│   ├── index.html
-│   ├── favicon.ico
-│   └── ...
+DhanGyan-master/
 ├── src/
-│   ├── components/         # Reusable components
-│   │   ├── features/      # Feature-specific components
-│   │   │   └── FinancialCalculator.js
-│   │   └── ui/           # UI components
-│   │       ├── index.js
-│   │       └── ParticleBackground.js
-│   ├── hooks/             # Custom React hooks
+│   ├── components/
+│   │   ├── common/              # Reusable UI components
+│   │   │   ├── Button/
+│   │   │   ├── Card/
+│   │   │   ├── Modal/
+│   │   │   ├── Input/
+│   │   │   └── Loading/
+│   │   ├── features/            # Feature-specific components
+│   │   │   ├── BadgeSystem/
+│   │   │   ├── Dashboard/
+│   │   │   └── FinancialCalculator/
+│   │   ├── layout/              # Layout components
+│   │   └── ui/                   # Legacy UI components
+│   ├── hooks/                    # Custom React hooks
 │   │   └── useAnimations.js
-│   ├── utils/             # Utility functions
-│   ├── AIChat.js          # AI chat assistant
-│   ├── AIMarketplace.js   # E-commerce marketplace
-│   ├── AIScribble.js      # Gesture-based drawing
-│   ├── App.js             # Main application component
-│   ├── CareerDevelopment.js
-│   ├── DailyChallenge.js   # Daily quest system
-│   ├── FinancialCosmos.js
-│   ├── FinancialLiteracyLearning.js
-│   ├── FinancialQuiz.js    # Quiz system
-│   ├── Firebase.js        # Firebase configuration
-│   ├── GuildSystem.js     # Community system
-│   ├── Homepage.js
-│   ├── LeaderboardRow.js
-│   ├── LiveFileSharing.js # File sharing feature
-│   ├── LoginSignupPage.js
-│   ├── PlayerProfile.js    # User profile
-│   └── ...
-├── .gitignore
+│   ├── utils/                    # Utility functions
+│   │   ├── aosHelpers.js
+│   │   └── gsapHelpers.js
+│   ├── contexts/                 # Context providers
+│   ├── services/                 # API services
+│   ├── styles/                   # Global styles
+│   │   ├── variables.css
+│   │   └── animations.css
+│   ├── assets/                   # Static assets
+│   ├── App.js                    # Main app component
+│   └── index.js                  # Entry point
+├── public/                       # Public assets
+├── .env                          # Environment variables
 ├── package.json
-├── tailwind.config.js
-├── postcss.config.js
 └── README.md
 ```
 
 ---
 
-## 🎨 Key Components
+## 🎨 Design System
 
-### App.js
-Main application component containing:
-- Navigation and sidebar
-- Feature routing
-- State management
-- User authentication
+### Color Palette
 
-### AIChat.js
-AI-powered chat assistant with:
-- Google Gemini API integration
-- Voice recognition
-- Image analysis
-- Weather integration
+| Color | Hex | Usage |
+|-------|-----|-------|
+| Primary Purple | `#8b5cf6` | Main brand color |
+| Secondary Pink | `#ec4899` | Accent color |
+| Accent Blue | `#3b82f6` | Highlights |
+| Success Green | `#10b981` | Success states |
+| Warning Yellow | `#f59e0b` | Warnings |
+| Error Red | `#ef4444` | Errors |
 
-### FinancialQuiz.js
-Interactive quiz system with:
-- Multi-language support
-- Difficulty levels
-- Timer and scoring
-- Category-based analytics
+### Gradients
 
-### GuildSystem.js
-Community features with:
-- 3D animated emblems
-- Member management
-- Guild perks system
+```css
+--gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+--gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+--gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+```
 
-### DailyChallenge.js
-Daily quest system with:
-- Dynamic challenges
-- Financial IQ tracking
-- Streak bonuses
-- Particle animations
+### Components
 
-### PlayerProfile.js
-User profile with:
-- Stats dashboard
-- Quest tracking
-- Achievement system
-- Timeline view
+All components follow a consistent design language:
+- **Glassmorphism** - Semi-transparent backgrounds with blur
+- **Shadows** - Multi-layered depth
+- **Rounded Corners** - Soft, modern edges
+- **Smooth Transitions** - 300ms ease-in-out
 
 ---
 
-## 🔧 Configuration
+## 🔧 Available Scripts
 
-### Firebase Setup
+### `npm start`
+Runs the app in development mode.
 
-1. Go to [Firebase Console](https://console.firebase.google.com/)
-2. Create a new project
-3. Enable Authentication (Email/Password)
-4. Create a web app
-5. Copy the configuration to your `.env` file
+### `npm test`
+Launches the test runner.
 
-### Google Gemini API
+### `npm run build`
+Builds the app for production to the `build` folder.
 
-1. Go to [Google AI Studio](https://makersuite.google.com/)
-2. Create an API key
-3. Add it to your `.env` file
+### `npm run lint`
+Runs ESLint to check code quality.
 
-### Weather API
+---
 
-1. Sign up at [WeatherAPI.com](https://www.weatherapi.com/)
-2. Get your free API key
-3. Add it to your `.env` file
+## 📚 Component Library
+
+### Button
+```jsx
+import { Button } from './components/common';
+
+<Button variant="primary" size="md" onClick={handleClick}>
+  Click Me
+</Button>
+```
+
+**Variants:** `primary`, `secondary`, `glass`, `outline`, `ghost`  
+**Sizes:** `sm`, `md`, `lg`
+
+### Card
+```jsx
+import { Card } from './components/common';
+
+<Card variant="glass" interactive glow>
+  Your content here
+</Card>
+```
+
+**Variants:** `glass`, `solid`, `outline`
+
+### Modal
+```jsx
+import { Modal } from './components/common';
+
+<Modal isOpen={isOpen} onClose={handleClose} title="Title" size="md">
+  Modal content
+</Modal>
+```
+
+**Sizes:** `sm`, `md`, `lg`, `xl`
+
+### Input
+```jsx
+import { Input } from './components/common';
+
+<Input
+  label="Email"
+  type="email"
+  value={email}
+  onChange={(e) => setEmail(e.target.value)}
+  error={emailError}
+/>
+```
+
+### Loading
+```jsx
+import { Loading } from './components/common';
+
+<Loading variant="spinner" size="md" text="Loading..." />
+```
+
+**Variants:** `spinner`, `dots`, `pulse`
+
+---
+
+## 🎬 Animation Libraries
+
+### GSAP
+```javascript
+import { fadeIn, slideInLeft } from './utils/gsapHelpers';
+
+fadeIn('.element', { duration: 1 });
+slideInLeft('.another-element', { delay: 0.2 });
+```
+
+### AOS (Animate On Scroll)
+```jsx
+<div data-aos="fade-up" data-aos-duration="800">
+  Content animates when scrolling
+</div>
+```
+
+### Framer Motion
+```jsx
+import { motion } from 'framer-motion';
+
+<motion.div
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  whileHover={{ scale: 1.05 }}
+>
+  Animated content
+</motion.div>
+```
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **React** - UI library
+- **Tailwind CSS** - Utility-first CSS
+- **Framer Motion** - React animations
+- **GSAP** - Professional animations
+- **AOS** - Scroll animations
+- **Anime.js** - Complex animations
+- **Lottie** - JSON animations
+- **React Spring** - Physics-based animations
+
+### Backend & Services
+- **Firebase** - Authentication, Database, Storage
+- **Google Gemini API** - AI chatbot
+- **Weather API** - Real-time weather data
+
+### Libraries
+- **Lucide React** - Icon library
+- **React Hot Toast** - Toast notifications
+- **PDF.js** - PDF rendering
+- **Particles.js** - Background effects
+
+---
+
+## 🔐 Environment Variables
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `REACT_APP_FIREBASE_API_KEY` | Firebase API key | ✅ Yes |
+| `REACT_APP_GEMINI_API_KEY` | Gemini AI API key | ✅ Yes |
+| `REACT_APP_WEATHER_API_KEY` | Weather API key | ⚠️ Optional |
+| `REACT_APP_PICOVOICE_ACCESS_KEY` | Voice recognition | ⚠️ Optional |
+
+---
+
+## 🎯 Key Features Explained
+
+### 1. Guild System
+Join guilds to collaborate with other learners. Complete group challenges, share resources, and compete in team leaderboards.
+
+### 2. AI Chat Assistant
+Powered by Google Gemini, the chat assistant provides:
+- Instant answers to financial questions
+- Voice input support
+- Weather integration
+- Image recognition
+- Context-aware responses
+
+### 3. Daily Challenges
+New challenges every day to keep you engaged:
+- Quizzes
+- Calculators
+- Real-world scenarios
+- Earn XP and badges
+
+### 4. Badge System
+Unlock badges by:
+- Completing challenges
+- Reaching milestones
+- Helping others
+- Streaks
+
+### 5. Financial Calculator
+Tools for:
+- Budget planning
+- Investment projections
+- Loan calculations
+- Savings goals
+
+---
+
+## 🎨 Customization
+
+### Changing Theme Colors
+
+Edit `src/styles/variables.css`:
+
+```css
+:root {
+  --primary-500: #your-color;
+  --secondary-500: #your-color;
+}
+```
+
+### Adding Custom Animations
+
+Create animations in `src/styles/animations.css`:
+
+```css
+@keyframes myAnimation {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
+```
+
+---
+
+## 🚀 Deployment
+
+### Build for Production
+```bash
+npm run build
+```
+
+### Deploy to Firebase Hosting
+```bash
+npm install -g firebase-tools
+firebase login
+firebase init
+firebase deploy
+```
+
+### Deploy to Vercel
+```bash
+npm install -g vercel
+vercel
+```
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions! Here's how you can help:
+We welcome contributions! Please follow these steps:
 
-### How to Contribute
-
-1. **Fork the repository**
-   ```bash
-   git fork https://github.com/batmandevx/DhanGyan.git
-   ```
-
-2. **Create a feature branch**
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-
-3. **Make your changes**
-   - Follow the existing code style
-   - Add comments for complex logic
-   - Update documentation as needed
-
-4. **Commit your changes**
-   ```bash
-   git commit -m "feat: add your feature description"
-   ```
-
-5. **Push to your branch**
-   ```bash
-   git push origin feature/your-feature-name
-   ```
-
-6. **Create a Pull Request**
-   - Describe your changes
-   - Reference any related issues
-   - Wait for review
-
-### Contribution Guidelines
-
-- ✅ Follow the existing code style
-- ✅ Write meaningful commit messages
-- ✅ Add tests for new features
-- ✅ Update documentation
-- ✅ Be respectful and constructive
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 👥 Team
-
-- **Lead Developer** - [batmandevx](https://github.com/batmandevx)
-- **Contributors** - All contributors are welcome!
+This project is licensed under the MIT License.
 
 ---
 
 ## 🙏 Acknowledgments
 
-- **Google** - For the Gemini AI API
-- **Firebase** - For backend services
-- **TensorFlow** - For machine learning models
-- **React Community** - For amazing libraries and tools
-- **Lucide** - For beautiful icons
+- **Google Gemini** for AI capabilities
+- **GSAP** for animation framework
+- **Firebase** for backend services
+- **Lucide** for icons
+- All open-source contributors
 
 ---
 
-## 📞 Support & Contact
+## 📞 Support
 
-- 📧 Email: support@dhangyan.com
-- 🐛 Issues: [GitHub Issues](https://github.com/batmandevx/DhanGyan/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/batmandevx/DhanGyan/discussions)
+For support, email support@dhangyan.com or join our Discord community.
 
 ---
 
-## 🗺️ Roadmap
-
-### Phase 1 - Current Features ✅
-- [x] AI Chat Assistant
-- [x] Financial Quiz System
-- [x] Guild System
-- [x] Daily Challenges
-- [x] Player Profile
-- [x] AI Marketplace
-- [x] Financial Learning Hub
-- [x] AI Scribble
-- [x] Live File Sharing
-
-### Phase 2 - Upcoming Features 🚧
-- [ ] Mobile App (React Native)
-- [ ] Advanced Financial Calculators
-- [ ] Investment Portfolio Tracker
-- [ ] Budget Planning Tools
-- [ ] Credit Score Monitoring
-- [ ] Tax Planning Assistant
-- [ ] Retirement Calculator
-- [ ] Real-time Market Data
-
-### Phase 3 - Future Enhancements 🔮
-- [ ] Blockchain Integration
-- [ ] Cryptocurrency Education
-- [ ] NFT Marketplace
-- [ ] Virtual Financial Advisor
-- [ ] AR/VR Learning Experiences
-- [ ] Multiplayer Financial Games
-- [ ] Certification Programs
-
----
-
-## 📊 Stats
-
-<div align="center">
-
-![GitHub Stars](https://img.shields.io/github/stars/batmandevx/DhanGyan?style=social)
-![GitHub Forks](https://img.shields.io/github/forks/batmandevx/DhanGyan?style=social)
-![GitHub Issues](https://img.shields.io/github/issues/batmandevx/DhanGyan)
-![GitHub License](https://img.shields.io/github/license/batmandevx/DhanGyan)
-
-</div>
-
----
-
-<div align="center">
-
-**Made with ❤️ for Financial Literacy**
-
-[⬆ Back to Top](#-dhan-gyan---financial-literacy-platform)
-
-</div>
+**Made with ❤️ by the DhanGyan Team**

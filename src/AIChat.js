@@ -5,12 +5,12 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { useLeopard } from "@picovoice/leopard-react";
 import axios from 'axios';
 
-const API_KEY = 'AIzaSyDXbnxYXqssnnd9FLOrkKWw9wBhjMSVb7Q';
-const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent';
-const API_URL_VISION = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent';
+const API_KEY = process.env.REACT_APP_GEMINI_API_KEY;
+
 const PICOVOICE_ACCESS_KEY = '5MQQc8dKvmWzkZ/yagEE2dHM7IobxY8SzKpF4UnFuH4v1rm5YxMqVQ==';
 const WEATHER_API_KEY = '38bbd278ec684e78921132440240308';
 const WEATHER_API_URL = 'http://api.weatherapi.com/v1/current.json';
@@ -25,9 +25,10 @@ const AIChat = () => {
     const fileInputRef = useRef(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
-    const [theme, setTheme] = useState('dark');
+
     const [weather, setWeather] = useState(null);
     const [isListening, setIsListening] = useState(false);
+    const [theme, setTheme] = useState('dark');
     const recognitionRef = useRef(null);
 
     useEffect(() => {
@@ -128,11 +129,13 @@ const AIChat = () => {
             const greeting = getGreeting();
             setMessages([{ text: `${greeting} I'm your AIassistant. What's your name?`, sender: 'ai' }]);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSidebarOpen, messages.length]);
 
     useEffect(() => {
         initLeopard();
         fetchWeather();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -219,8 +222,11 @@ const AIChat = () => {
         }
     };
 
+    // Initialize Gemini API
+    const genAI = new GoogleGenerativeAI(API_KEY);
+
     const handleSendMessage = async () => {
-        if (input.trim() === '' && !image) return;
+        if (!input.trim() && !image) return;
 
         const userMessage = { text: input, sender: 'user', image };
         setMessages(prevMessages => [...prevMessages, userMessage]);
@@ -233,45 +239,46 @@ const AIChat = () => {
                 const aiResponse = `Nice to meet you, ${input}! How can I assist you today? Feel free to ask me anything or even send an image for analysis!`;
                 setMessages(prevMessages => [...prevMessages, { text: aiResponse, sender: 'ai' }]);
             } else {
-                let response;
+                const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
+                let result;
                 if (image) {
-                    const imageData = await getBase64(image);
-                    response = await fetch(`${API_URL_VISION}?key=${API_KEY}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{
-                                parts: [
-                                    { text: input || "What's in this image?" },
-                                    { inline_data: { mime_type: image.type, data: imageData.split(',')[1] } }
-                                ]
-                            }]
-                        }),
+                    const imageData = await new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => resolve(reader.result.split(',')[1]);
+                        reader.readAsDataURL(image);
                     });
+
+                    const prompt = input || "What's in this image?";
+                    const imagePart = {
+                        inlineData: {
+                            data: imageData,
+                            mimeType: image.type
+                        }
+                    };
+                    result = await model.generateContent([prompt, imagePart]);
                 } else {
-                    response = await fetch(`${API_URL}?key=${API_KEY}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ contents: [{ parts: [{ text: input }] }] }),
-                    });
+                    result = await model.generateContent(input);
                 }
 
-                const data = await response.json();
-                if (data.candidates && data.candidates[0] && data.candidates[0].content) {
-                    const aiMessage = { text: parseMessage(data.candidates[0].content.parts[0].text), sender: 'ai' };
-                    setMessages(prevMessages => [...prevMessages, aiMessage]);
-                } else {
-                    throw new Error('Invalid response from AI');
-                }
+                const response = await result.response;
+                const text = response.text();
+
+                const aiMessage = { text: parseMessage(text), sender: 'ai' };
+                setMessages(prev => [...prev, aiMessage]);
             }
         } catch (error) {
             console.error('Error fetching AI response:', error);
-            const errorMessage = { text: 'Sorry, I encountered an error. Please try again.', sender: 'ai' };
-            setMessages(prevMessages => [...prevMessages, errorMessage]);
-        }
+            let errorMessage = 'Sorry, I encountered an error. Please try again.';
 
-        setIsTyping(false);
-        setImage(null);
+            if (error.message && error.message.includes('400')) errorMessage = "Invalid API Key or Bad Request (400). Please check your key.";
+
+            const aiError = { text: errorMessage, sender: 'ai' };
+            setMessages(prev => [...prev, aiError]);
+        } finally {
+            setIsTyping(false);
+            setImage(null);
+        }
     };
 
     const parseMessage = (text) => {
@@ -322,30 +329,11 @@ const AIChat = () => {
         });
     };
 
-    const getBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-        });
-    };
-
     const clearChat = () => {
         setMessages([]);
         setImage(null);
         setIsTyping(false);
         setUserName('');
-    };
-
-    const toggleRecording = async () => {
-        if (isRecording) {
-            await stopRecording();
-            setIsRecording(false);
-        } else {
-            await startRecording();
-            setIsRecording(true);
-        }
     };
 
     const readAloud = (text) => {
