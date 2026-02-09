@@ -47,7 +47,7 @@ const Hero = ({ onStart }) => {
                         <Shuffle
                             text="Dhyan Gyan"
                             tag="h1"
-                            className="text-5xl md:text-8xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-yellow-400 drop-shadow-lg"
+                            className="text-5xl md:text-8xl font-bold tracking-tight text-yellow-400 drop-shadow-lg"
                             shuffleDirection="right"
                             duration={0.4}
                             shuffleTimes={2}

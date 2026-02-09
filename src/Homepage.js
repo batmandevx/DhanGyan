@@ -138,7 +138,7 @@ const DhyanGyanHomepage = () => {
             <Shuffle
               text="Dhyan Gyan"
               tag="h1"
-              className="text-6xl md:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-500"
+              className="text-6xl md:text-8xl font-bold text-yellow-400 drop-shadow-lg"
               shuffleDirection="right"
               duration={0.4}
               shuffleTimes={2}
