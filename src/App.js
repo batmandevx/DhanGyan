@@ -82,7 +82,7 @@ const Navbar = ({ user, onOpenSidebar, onOpenProfile }) => (
         >
           <Menu size={24} />
         </motion.button>
-        <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
+        <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
           Dhan Gyan
         </h1>
       </div>
@@ -233,7 +233,7 @@ const AppContent = () => {
         {/* Footer */}
         <footer className="py-12 px-4 border-t border-white/10">
           <div className="max-w-6xl mx-auto text-center">
-            <h3 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
+            <h3 className="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
               Dhan Gyan
             </h3>
             <p className="text-gray-400 mb-6">

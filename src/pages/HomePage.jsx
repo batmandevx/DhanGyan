@@ -26,28 +26,29 @@ const Hero = ({ onStart }) => {
     const { text } = useTypewriter(typewriterWords, 100, 2000);
 
     return (
-        <section className="min-h-screen flex items-center justify-center relative pt-20 px-4 overflow-hidden">
+        <section className="min-h-screen flex items-center justify-center relative pt-24 px-6 overflow-hidden">
             {/* 3D Background Removed */}
             <div className="absolute inset-0 z-0">
                 {/* <Hero3D /> */}
             </div>
 
-            <div className="text-center max-w-5xl mx-auto relative z-10">
+            <div className="text-center w-full max-w-screen-2xl mx-auto relative z-10">
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
                 >
-                    <span className="inline-flex items-center gap-2 px-4 py-2 mb-6 bg-white/10 rounded-full border border-white/20 backdrop-blur-md">
-                        <Sparkles size={16} className="text-yellow-400" />
-                        <span className="text-sm font-medium text-yellow-100">Gamifying Financial Literacy for Bharat</span>
+                    <span className="inline-flex items-center gap-3 px-8 py-4 mb-10 bg-white/10 rounded-full border border-white/20 backdrop-blur-md">
+                        <Sparkles size={24} className="text-yellow-400" />
+                        <span className="text-lg font-semibold text-yellow-100">Gamifying Financial Literacy for Bharat</span>
                     </span>
 
-                    <div className="mb-6 flex justify-center">
+                    <div className="mb-8 flex justify-center">
                         <Shuffle
                             text="Dhyan Gyan"
                             tag="h1"
-                            className="text-5xl md:text-8xl font-bold tracking-tight text-yellow-400 drop-shadow-lg"
+                            className="font-black tracking-tight text-yellow-400"
+                            style={{ fontSize: 'clamp(5rem, 12vw, 14rem)', lineHeight: 1.1, textShadow: '0 4px 60px rgba(250, 204, 21, 0.5), 0 0 120px rgba(250, 204, 21, 0.2)' }}
                             shuffleDirection="right"
                             duration={0.4}
                             shuffleTimes={2}
@@ -59,23 +60,23 @@ const Hero = ({ onStart }) => {
                         />
                     </div>
 
-                    <div className="h-16 mb-8 flex items-center justify-center">
-                        <h2 className="text-2xl md:text-4xl font-bold text-white/90">
+                    <div className="h-24 mb-12 flex items-center justify-center">
+                        <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white/90">
                             {text}
                             <span className="animate-pulse text-purple-400">|</span>
                         </h2>
                     </div>
 
-                    <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed">
+                    <p className="text-2xl md:text-3xl text-gray-300 mb-14 max-w-4xl mx-auto leading-relaxed">
                         Interactive Learning through Play. Master your finances with quests,
                         rewards, and a community of learners across India.
                     </p>
 
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <AnimatedButton variant="primary" size="lg" onClick={onStart} className="shadow-lg shadow-purple-500/20">
-                            <Play size={20} /> Start Your Journey
+                    <div className="flex flex-col sm:flex-row gap-6 justify-center">
+                        <AnimatedButton variant="primary" size="lg" onClick={onStart} className="shadow-lg shadow-purple-500/20 text-xl px-10 py-5">
+                            <Play size={24} /> Start Your Journey
                         </AnimatedButton>
-                        <AnimatedButton variant="outline" size="lg" className="backdrop-blur-sm bg-white/5">
+                        <AnimatedButton variant="outline" size="lg" className="backdrop-blur-sm bg-white/5 text-xl px-10 py-5">
                             Watch Demo
                         </AnimatedButton>
                     </div>
@@ -86,7 +87,7 @@ const Hero = ({ onStart }) => {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.5 }}
-                    className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16"
+                    className="grid grid-cols-2 md:grid-cols-4 gap-10 mt-24"
                 >
                     {[
                         { value: '50K+', label: 'Players', icon: Users, color: 'text-blue-400' },
@@ -97,11 +98,11 @@ const Hero = ({ onStart }) => {
                         <motion.div
                             key={index}
                             whileHover={{ scale: 1.05, translateY: -5 }}
-                            className="p-4 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-md hover:bg-white/10 transition-colors"
+                            className="p-8 bg-white/5 rounded-3xl border border-white/10 backdrop-blur-md hover:bg-white/10 transition-colors"
                         >
-                            <stat.icon size={24} className={`mx-auto mb-2 ${stat.color}`} />
-                            <div className="text-2xl md:text-3xl font-bold">{stat.value}</div>
-                            <div className="text-sm text-gray-400">{stat.label}</div>
+                            <stat.icon size={40} className={`mx-auto mb-4 ${stat.color}`} />
+                            <div className="text-4xl md:text-5xl font-bold">{stat.value}</div>
+                            <div className="text-lg text-gray-400">{stat.label}</div>
                         </motion.div>
                     ))}
                 </motion.div>
@@ -123,10 +124,10 @@ const QuickActions = ({ navigate, openModal }) => {
     ];
 
     return (
-        <section className="py-12 px-4 relative z-10">
-            <div className="max-w-6xl mx-auto">
+        <section className="py-20 px-6 relative z-10">
+            <div className="max-w-screen-xl mx-auto">
                 <SectionTitle title="Quick Actions" subtitle="Jump into the action" />
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-8">
                     {actions.map((action, index) => (
                         <motion.button
                             key={action.name}
@@ -137,12 +138,12 @@ const QuickActions = ({ navigate, openModal }) => {
                             whileHover={{ scale: 1.05, y: -5 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={action.onClick}
-                            className="p-6 rounded-2xl bg-gradient-to-br from-white/5 to-white/10 border border-white/10 hover:border-purple-500/50 transition-all group backdrop-blur-sm"
+                            className="p-10 rounded-3xl bg-gradient-to-br from-white/5 to-white/10 border border-white/10 hover:border-purple-500/50 transition-all group backdrop-blur-sm"
                         >
-                            <div className={`w-14 h-14 mx-auto mb-3 rounded-xl bg-gradient-to-br ${action.color} flex items-center justify-center group-hover:shadow-lg group-hover:shadow-purple-500/30 transition-shadow`}>
-                                <action.icon size={28} className="text-white" />
+                            <div className={`w-20 h-20 mx-auto mb-5 rounded-2xl bg-gradient-to-br ${action.color} flex items-center justify-center group-hover:shadow-lg group-hover:shadow-purple-500/30 transition-shadow`}>
+                                <action.icon size={40} className="text-white" />
                             </div>
-                            <span className="font-medium text-sm">{action.name}</span>
+                            <span className="font-bold text-lg">{action.name}</span>
                         </motion.button>
                     ))}
                 </div>
@@ -152,9 +153,9 @@ const QuickActions = ({ navigate, openModal }) => {
 };
 
 const WomenEmpowermentSection = () => (
-    <section className="py-20 px-4 relative overflow-hidden">
+    <section className="py-28 px-8 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-pink-900/20 to-purple-900/20 pointer-events-none" />
-        <div className="max-w-6xl mx-auto relative z-10">
+        <div className="max-w-screen-xl mx-auto relative z-10">
             <div className="grid md:grid-cols-2 gap-12 items-center">
                 <motion.div
                     initial={{ opacity: 0, x: -50 }}
@@ -164,8 +165,8 @@ const WomenEmpowermentSection = () => (
                     <div className="inline-flex items-center gap-2 px-3 py-1 bg-pink-500/20 text-pink-300 rounded-full text-sm font-semibold mb-4">
                         <Heart size={14} className="fill-pink-500" /> Women in Fintech
                     </div>
-                    <h2 className="text-4xl font-bold mb-6">Empowering Women to Lead in Finance</h2>
-                    <p className="text-gray-300 mb-6 text-lg">
+                    <h2 className="text-4xl md:text-6xl font-bold mb-8">Empowering Women to Lead in Finance</h2>
+                    <p className="text-gray-300 mb-8 text-xl md:text-2xl leading-relaxed">
                         Bridging the gender gap in financial literacy and technology. We provide dedicated resources, mentorship, and scholarships for women aspiring to build a career in Fintech.
                     </p>
                     <ul className="space-y-4 mb-8">
@@ -224,12 +225,12 @@ const WomenEmpowermentSection = () => (
 );
 
 const StudentHubSection = () => (
-    <section className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16">
-                <span className="text-blue-400 font-bold tracking-wider uppercase text-sm">Future Ready</span>
-                <h2 className="text-4xl font-bold mt-2 mb-4">Student Financial Hub</h2>
-                <p className="text-gray-400 max-w-2xl mx-auto">
+    <section className="py-28 px-8">
+        <div className="max-w-screen-xl mx-auto">
+            <div className="text-center mb-20">
+                <span className="text-blue-400 font-bold tracking-wider uppercase text-lg">Future Ready</span>
+                <h2 className="text-4xl md:text-6xl font-bold mt-3 mb-6">Student Financial Hub</h2>
+                <p className="text-gray-400 max-w-4xl mx-auto text-xl">
                     Start young, retire rich. We equip students with the practical skills needed to navigate the modern financial landscape, from student loans to startup funding.
                 </p>
             </div>
@@ -258,7 +259,7 @@ const StudentHubSection = () => (
                     <motion.div
                         key={i}
                         whileHover={{ y: -10 }}
-                        className="p-8 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors relative group overflow-hidden"
+                        className="p-10 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors relative group overflow-hidden"
                     >
                         <div className={`absolute top-0 right-0 p-32 bg-${item.color}-500/10 blur-3xl rounded-full -mr-16 -mt-16 pointer-events-none`} />
                         <div className={`w-14 h-14 rounded-2xl bg-${item.color}-500/20 flex items-center justify-center mb-6`}>
@@ -277,8 +278,8 @@ const StudentHubSection = () => (
 );
 
 const Testimonials = () => (
-    <section className="py-20 px-4 bg-black/20">
-        <div className="max-w-6xl mx-auto">
+    <section className="py-28 px-8 bg-black/20">
+        <div className="max-w-screen-xl mx-auto">
             <SectionTitle title="Success Stories" subtitle="Hear from our community" />
             <div className="grid md:grid-cols-3 gap-6">
                 {[
@@ -346,18 +347,18 @@ const HomePage = ({ user, onStart, navigate, openModal }) => {
             <Testimonials />
 
             {/* Call to Action */}
-            <section className="py-20 px-4 text-center relative overflow-hidden">
+            <section className="py-28 px-8 text-center relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-b from-purple-900/20 to-black pointer-events-none" />
-                <div className="max-w-4xl mx-auto relative z-10">
-                    <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Start Your Journey?</h2>
-                    <p className="text-xl text-gray-300 mb-10">
+                <div className="max-w-screen-lg mx-auto relative z-10">
+                    <h2 className="text-5xl md:text-7xl font-bold mb-10">Ready to Start Your Journey?</h2>
+                    <p className="text-2xl md:text-3xl text-gray-300 mb-14">
                         Join thousands of others who are taking control of their financial future today.
                     </p>
                     <AnimatedButton
                         variant="primary"
                         size="lg"
                         onClick={onStart}
-                        className="text-lg px-10 py-4 shadow-xl shadow-purple-500/30"
+                        className="text-2xl px-14 py-6 shadow-xl shadow-purple-500/30"
                     >
                         Create Free Account
                     </AnimatedButton>
